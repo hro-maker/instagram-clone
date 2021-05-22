@@ -21,11 +21,11 @@ export class User{
     @Prop({type:Boolean,default:false})
     isActive: boolean;
 
-    @Prop({ type:String,required:false })
-    avatarU?: string;
+    @Prop({ type:String,required:false,default:"" })
+    avatar?: string;
 
     @Prop({ type:[String],required:false ,default:[]})
-    images?: string;
+    images?: string[];
 
 }
 export const UserSchema = SchemaFactory.createForClass(User);
