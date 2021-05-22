@@ -6,3 +6,7 @@ export class registerdto{
     name:string
     surename:string
 }
+export class logindto{
+    email:string
+    password:string
+}
