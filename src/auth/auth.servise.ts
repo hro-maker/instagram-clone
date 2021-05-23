@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/models/user';
 import { logindto, loginresponse, registerdto } from './../dtos/authdto';
 import * as bcrypt from 'bcrypt';
-import { FileServise } from 'src/file/file.servise';
+import { FileServise, FileType } from 'src/file/file.servise';
 import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
 import { HttpException } from '@nestjs/common';
@@ -26,11 +26,10 @@ export class Authprovider {
       dto.password = await bcrypt.hash(dto.password, 12);
       let avatar = '';
       if (files) {
-        avatar = this.fileservise.create(files[0]);
+          avatar = this.fileservise.createFile(FileType.IMAGE,files[0])
       }
-      const user = avatar.length > 1 ? { ...dto, avatar,images: [avatar] }:{ ...dto, avatar };
+      const user ={ ...dto, avatar };
       const newuser = await this.userModel.create(user);
-
       return newuser;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -38,7 +37,7 @@ export class Authprovider {
   }
   async login(dto: logindto):Promise<loginresponse> {
     try {
-      const user = await this.userModel.findOne({ email: dto.email });
+      const user = await this.userModel.findOne({ email: dto.email }).populate('posts');
       if (!user) {
         throw new BadRequestException('user dont found');
       }
@@ -51,20 +50,10 @@ export class Authprovider {
         process.env.JWT_SECRET,
         {  expiresIn: '1h' }
       );
-      return {token};
+      return {token,user};
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
   
-  async removeimage(user:string,fileName:string){
-
-  }
-//   async removeavatar(user:string){
-//       const userr=await this.userModel.findOne({_id:user})
-//       let avatarname=userr.avatar;
-//       userr.avatar=""
-//      await  userr.save()
-//      if(userr.images.includes(user))
-// }
 }

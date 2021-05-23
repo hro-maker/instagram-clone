@@ -13,7 +13,6 @@ export class AuthController {
     register(@Body()dto:registerdto,@UploadedFiles() files){
         return this.authservise.register(dto,files.foto)
     }
-
     @Post('/login')
     login(@Body()dto:logindto){
             return this.authservise.login(dto)

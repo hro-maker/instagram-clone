@@ -1,4 +1,5 @@
 
+import { User } from 'src/models/user';
 
 export class registerdto{
     email:string
@@ -11,5 +12,6 @@ export class logindto{
     password:string
 }
 export interface loginresponse{
-    token:string
+    token:string,
+    user:User
 }
