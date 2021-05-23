@@ -1,5 +1,6 @@
 import { Module, Post } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { FileServise } from 'src/file/file.servise';
 import { Coment, ComentSchema } from 'src/models/comentschema';
 import { PostSchema } from 'src/models/post';
 import { User, UserSchema } from 'src/models/user';
@@ -15,6 +16,6 @@ import { postservise } from './post.servise';
     ]),
   ],
   controllers: [PostController],
-  providers:[postservise]
+  providers:[postservise,FileServise]
 })
 export class PostModule {}

@@ -9,12 +9,15 @@ import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
+import { Post, PostDocument } from 'src/models/post';
 dotenv.config();
 
 @Injectable()
 export class Authprovider {
   constructor(
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+   
     private fileservise: FileServise,
   ) {}
   async register(dto: registerdto, files: Array<any>): Promise<User> {
@@ -37,7 +40,10 @@ export class Authprovider {
   }
   async login(dto: logindto):Promise<loginresponse> {
     try {
-      const user = await this.userModel.findOne({ email: dto.email }).populate('posts');
+      const user = await  this.userModel.findOne({ email: dto.email })
+    
+     const  el=await this.postModel.find({})
+      console.log(el)
       if (!user) {
         throw new BadRequestException('user dont found');
       }

@@ -25,7 +25,7 @@ export class User {
   @Prop({ type: String, required: false, default: '' })
   avatar?: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],default:[] })
+  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}]})
   posts: Post[];
   
   @Prop({ type: [String], required: false, default: [] })
