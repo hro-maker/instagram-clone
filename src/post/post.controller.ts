@@ -1,10 +1,8 @@
-import { Body, Controller, Get, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { registerdto } from 'src/dtos/authdto';
 import { createpostdto } from 'src/dtos/postdto';
 import { AuthGuard } from 'src/utiles/guards/canactivate';
 import { postservise } from './post.servise';
-import { Request } from 'express';
 @Controller('post')
 export class PostController {
     constructor(private postservise:postservise){}
@@ -18,7 +16,14 @@ export class PostController {
     }
 
     @Get('/getall')
+    @UseGuards(AuthGuard)
     getall(){
         return this.postservise.getall()
+    }
+
+    @Get('/getbyId/:id')
+    @UseGuards(AuthGuard)
+    getbyId(@Param("id")id:any){
+        return this.postservise.getbyId(id)
     }
 }

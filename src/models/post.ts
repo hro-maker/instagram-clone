@@ -17,9 +17,8 @@ export class Post{
     @Prop({type:String,required:true})
     imageUrl: string;
 
-    @Prop({type:[String],default:[]})
-    likes: string[];
-
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
+    likes: User[];
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Coment' }],default:[] })
     coments: Coment[];

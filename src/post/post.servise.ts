@@ -1,8 +1,8 @@
-import { Injectable, Post, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FileServise, FileType } from 'src/file/file.servise';
-import { PostDocument } from 'src/models/post';
+import { Post, PostDocument } from 'src/models/post';
 import { User, UserDocument } from 'src/models/user';
 interface createdto {
   description: string;
@@ -38,6 +38,9 @@ export class postservise {
   }
 
   async getall(){
-    return await  this.postModel.find({})
+    return await  this.postModel.find({}).populate("user")
+  }
+  async getbyId(id:any){
+    return await  this.postModel.findOne({_id:id}).populate("user","avatar name _id")
   }
 }

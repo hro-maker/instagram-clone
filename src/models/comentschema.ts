@@ -15,8 +15,8 @@ export class Coment{
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Post' })
     post:Post
     
-    @Prop({type:[String],default:[]})
-    likes: string[];
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
+    likes: User[];
 
     @Prop({ type:Date,default:Date.now()})
     createdAt: Date;

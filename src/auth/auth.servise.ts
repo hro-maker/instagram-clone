@@ -40,10 +40,7 @@ export class Authprovider {
   }
   async login(dto: logindto):Promise<loginresponse> {
     try {
-      const user = await  this.userModel.findOne({ email: dto.email })
-    
-     const  el=await this.postModel.find({})
-      console.log(el)
+      const user = await  this.userModel.findOne({ email: dto.email }).populate('posts',"imageUrl _id")
       if (!user) {
         throw new BadRequestException('user dont found');
       }
@@ -61,5 +58,7 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  
+  async updateprofile(dto,file){
+
+  }
 }

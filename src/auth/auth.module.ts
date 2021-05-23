@@ -9,9 +9,11 @@ import { Authprovider } from './auth.servise';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-      { name: Post.name, schema: PostSchema },
+      { name: Post.name, schema: PostSchema }
     ]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema }
+    ])
   ],
   controllers: [AuthController],
   providers: [Authprovider, FileServise],
