@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { createpostdto } from 'src/dtos/postdto';
+import { createpostdto, updatepostdto } from 'src/dtos/postdto';
 import { AuthGuard } from 'src/utiles/guards/canactivate';
 import { postservise } from './post.servise';
 @Controller('post')
@@ -25,5 +25,11 @@ export class PostController {
     @UseGuards(AuthGuard)
     getbyId(@Param("id")id:any){
         return this.postservise.getbyId(id)
+    }
+
+    @Patch('/update')
+    @UseGuards(AuthGuard)
+    update(@Body()dto:updatepostdto,@Req() req){
+                return this.postservise.updatedescription(dto,req.userId)
     }
 }

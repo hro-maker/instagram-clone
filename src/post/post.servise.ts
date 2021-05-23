@@ -1,6 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { updatepostdto } from 'src/dtos/postdto';
 import { FileServise, FileType } from 'src/file/file.servise';
 import { Post, PostDocument } from 'src/models/post';
 import { User, UserDocument } from 'src/models/user';
@@ -30,19 +31,30 @@ export class postservise {
           await post.populate("user")
           user.posts.push(post._id)
           await user.save()
-          console.log(user)
           return post;
     } catch (error) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-
   async getall(){
-    await this.userModel.remove({})
-    await this.postModel.remove({})
+    // await this.userModel.remove({})
+    // await this.postModel.remove({})
     return await  this.postModel.find({}).populate("user")
   }
   async getbyId(id:any){
     return await  this.postModel.findOne({_id:id}).populate("user","avatar name _id")
+  }
+  async updatedescription(dto:updatepostdto,userId:any):Promise<Post>{
+  try {
+    const post= await this.postModel.findOne({_id:dto.id})
+    if(post.user != userId){
+     throw new HttpException("action dont alloed", HttpStatus.BAD_REQUEST);
+    }
+    post.description=dto.description;
+    await post.save()
+    return post
+  } catch (error) {
+    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+  }
   }
 }
