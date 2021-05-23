@@ -10,3 +10,6 @@ export class logindto{
     email:string
     password:string
 }
+export interface loginresponse{
+    token:string
+}

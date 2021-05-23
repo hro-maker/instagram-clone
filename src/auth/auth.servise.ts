@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/models/user';
-import { logindto, registerdto } from './../dtos/authdto';
+import { logindto, loginresponse, registerdto } from './../dtos/authdto';
 import * as bcrypt from 'bcrypt';
 import { FileServise } from 'src/file/file.servise';
 import * as dotenv from 'dotenv';
@@ -36,7 +36,7 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  async login(dto: logindto) {
+  async login(dto: logindto):Promise<loginresponse> {
     try {
       const user = await this.userModel.findOne({ email: dto.email });
       if (!user) {
@@ -56,4 +56,15 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+  
+  async removeimage(user:string,fileName:string){
+
+  }
+//   async removeavatar(user:string){
+//       const userr=await this.userModel.findOne({_id:user})
+//       let avatarname=userr.avatar;
+//       userr.avatar=""
+//      await  userr.save()
+//      if(userr.images.includes(user))
+// }
 }
