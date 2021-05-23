@@ -15,3 +15,6 @@ export interface loginresponse{
     token:string,
     user:User
 }
+export interface registerresponse{
+    message:string
+}

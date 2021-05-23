@@ -16,6 +16,9 @@ export class User {
   @Prop({ type: String })
   email: string;
 
+  @Prop({ type: String ,default:""})
+  confirm: string;
+
   @Prop({ type: String, required: true })
   password: string;
 
@@ -25,9 +28,9 @@ export class User {
   @Prop({ type: String, required: false, default: '' })
   avatar?: string;
 
-  @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}]})
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] })
   posts: Post[];
-  
+
   @Prop({ type: [String], required: false, default: [] })
   images?: string[];
 }

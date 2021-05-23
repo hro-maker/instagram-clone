@@ -16,6 +16,7 @@ export class AuthGuard implements CanActivate{
              const tokenn=req.headers.authorization.split(" ")[1]
                     const token=await jwt.verify(tokenn,process.env.JWT_SECRET)
                     req.userId=token.id
+                    req.email=token.email
                     return true
                } catch (error) {
                    throw new HttpException(error.message,HttpStatus.BAD_REQUEST)
