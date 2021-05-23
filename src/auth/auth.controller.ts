@@ -24,7 +24,7 @@ export class AuthController {
         { name: 'foto', maxCount: 1 }
       ]))
     updateprofile(@Body() dto:User,@UploadedFiles() files){
-             
+             return this.authservise.updateprofile(dto,files)
     }
       
 }

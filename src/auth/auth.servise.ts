@@ -59,6 +59,6 @@ export class Authprovider {
     }
   }
   async updateprofile(dto,file){
-
+    
   }
 }
