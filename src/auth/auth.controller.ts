@@ -1,8 +1,9 @@
-import { Body, Controller, Patch, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Patch, Post, Req, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { Authprovider } from './auth.servise';
 import { logindto, registerdto } from './../dtos/authdto';
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { User } from 'src/models/user';
+import { AuthGuard } from "src/utiles/guards/canactivate";
 
 @Controller('auth')
 export class AuthController {
@@ -20,11 +21,12 @@ export class AuthController {
     }
 
     @Patch('/update')
+    @UseGuards(AuthGuard)
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'foto', maxCount: 1 }
       ]))
-    updateprofile(@Body() dto:User,@UploadedFiles() files){
-             return this.authservise.updateprofile(dto,files)
+    updateprofile(@Body() dto:any,@Req() req:any,@UploadedFiles() files){
+             return this.authservise.updateprofile(dto,files,req.userId)
     }
       
 }

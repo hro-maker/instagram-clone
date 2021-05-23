@@ -27,7 +27,13 @@ export class FileServise{
     }
 
     removeFile(fileName: string) {
-
+        const filePath = path.resolve(__dirname, '..', 'static',fileName)
+        try {
+            fs.unlinkSync(filePath)
+            console.log("fileremooved")
+          } catch(err) {
+            console.error("file error",err)
+          }
     }
 
 }

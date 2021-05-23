@@ -58,7 +58,23 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  async updateprofile(dto,file){
-    
+async updateprofile(dto:any,file,id){
+  try {
+    let user=await this.userModel.findOne({_id:id})
+    if (file) {
+        if(user.avatar.length > 1){
+            this.fileservise.removeFile(user.avatar)
+        }
+     let newavatar = this.fileservise.createFile(FileType.IMAGE,file.foto[0])
+      dto.avatar=newavatar
+    }
+    const olduser=JSON.parse(JSON.stringify({...user}))._doc
+    const newuserr={...olduser,...dto}
+  await this.userModel.findByIdAndUpdate({_id:user._id},newuserr)
+  return newuserr
+  return 
+  } catch (error) {
+    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+  }
   }
 }
