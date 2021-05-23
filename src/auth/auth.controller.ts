@@ -26,7 +26,6 @@ export class AuthController {
   login(@Body() dto: logindto) {
     return this.authservise.login(dto);
   }
-
   @Patch('/update')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileFieldsInterceptor([{ name: 'foto', maxCount: 1 }]))

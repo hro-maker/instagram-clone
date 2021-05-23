@@ -22,7 +22,6 @@ try {
   transporter = nodemailer.createTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',
-    port: 25,
     auth: {
       user: 'hrantmuradyan137@gmail.com',
       pass: 'lyveokznvxckyhgc',
@@ -103,9 +102,9 @@ export class Authprovider {
       if (!user) {
         throw new BadRequestException('user dont found');
       }
-      if (user.confirm.length > 0) {
-        throw new BadRequestException('before login please confirm your email');
-      }
+      // if (user.confirm.length > 0) {
+      //   throw new BadRequestException('before login please confirm your email');
+      // }
       const validpassword = await bcrypt.compare(dto.password, user.password);
       if (!validpassword) {
         throw new BadRequestException('incorrect password');
@@ -128,7 +127,7 @@ export class Authprovider {
   async updateprofile(dto: any, file, id) {
     try {
       let user = await this.userModel.findOne({ _id: id });
-      if (file) {
+      if (file.foto) {
         if (user.avatar.length > 1) {
           this.fileservise.removeFile(user.avatar);
         }
@@ -147,7 +146,6 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-
   async emailconfirm(email: any, code: string) {
     const user = await this.userModel.findOne({ email });
     if (user.confirm.length > 0 && user.confirm === code) {
