@@ -51,10 +51,27 @@ export class postservise {
      throw new HttpException("action dont alloed", HttpStatus.BAD_REQUEST);
     }
     post.description=dto.description;
+    post.updatedAt=new Date(Date.now())
     await post.save()
     return post
   } catch (error) {
     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   }
   }
+
+  async togglepostlike(postId:string,userId){
+          try {
+            const post=await this.postModel.findOne({_id:postId})
+            if(!post.likes.includes(userId)){
+                post.likes.push(userId)
+            }else{
+                 post.likes=post.likes.filter((el)=>el != userId) 
+            }
+            await post.save()
+            return post
+          } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+          }
+  }
+
 }

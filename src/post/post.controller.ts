@@ -32,4 +32,10 @@ export class PostController {
     update(@Body()dto:updatepostdto,@Req() req){
                 return this.postservise.updatedescription(dto,req.userId)
     }
+
+    @Post('/toglelike')
+    @UseGuards(AuthGuard)
+    togglepostlike(@Body()dto,@Req() req:any){
+        return this.postservise.togglepostlike(dto.postId,req.userId)
+    }
 }
