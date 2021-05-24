@@ -28,4 +28,16 @@ export class Commentservise{
         throw new BadRequestException(error.message)
        }         
     }
+    async deletecoment(comentId,userId){
+           try {
+            const coment=await this.comentmodel.findOne({_id:comentId})
+            if(coment.userId != userId){
+                throw new BadRequestException("action dont alloed")
+            }
+            await this.comentmodel.findOneAndDelete({_id:coment._id})
+            return {message:"coment deleted"}
+           } catch (error) {
+            throw new BadRequestException(error.message)
+           }
+    }
 }
