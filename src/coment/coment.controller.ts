@@ -15,6 +15,7 @@ export class ComentController {
     @Delete("/delete")
     @UseGuards(AuthGuard)
     deletepost(@Body()dto,@Req()req){
-            console.log(dto,req.userId)
+        //     console.log(req.userId)
+           return this.comentservise.deletecoment(dto.comentId,dto.postId,req.userId)
     }
 }
