@@ -184,4 +184,25 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+ async me(userId){
+    return await this.userModel.findOne({_id:userId}).populate('posts','imageUrl _id').populate('Isub')
+  }
+
+ async getISubscripers(userId){
+      try {
+          const user=await this.userModel.findOne({_id:userId}).populate('Isub', 'name surename avatar _id')
+          return user.Isub
+      } catch (error) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+  }
+async  getOtherSubscripers(userId){
+    try {
+      const user=await this.userModel.findOne({_id:userId}).populate('otherSub', 'name surename avatar _id')
+      return user.otherSub
+  } catch (error) {
+    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+  }
+  }
 }

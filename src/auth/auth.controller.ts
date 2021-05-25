@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Patch,
   Post,
   Req,
@@ -11,7 +13,6 @@ import {
 import { Authprovider } from './auth.servise';
 import { logindto, registerdto } from './../dtos/authdto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { User } from 'src/models/user';
 import { AuthGuard } from 'src/utiles/guards/canactivate';
 
 @Controller('auth')
@@ -48,4 +49,23 @@ export class AuthController {
   unsubscrip(@Body()dto,@Req()req){
       return this.authservise.unSubscript(req.userId,dto.userId)
   }
+
+  @Get()
+  @UseGuards(AuthGuard)
+  me(@Req()req){
+      return this.authservise.me(req.userId)
+  }
+
+  @Get('/isub/:id')
+  @UseGuards(AuthGuard)
+  isub(@Param() {id}){
+      return this.authservise.getISubscripers(id)
+  }
+
+  @Get('/othersub/:id')
+  @UseGuards(AuthGuard)
+  othersub(@Param() {id}){
+      return this.authservise.getOtherSubscripers(id)
+  }
+
 }
