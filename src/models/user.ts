@@ -28,10 +28,14 @@ export class User {
   @Prop({ type: String, required: false, default: '' })
   avatar?: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],default:[] })
   posts: Post[];
 
-  @Prop({ type: [String], required: false, default: [] })
-  images?: string[];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
+  Isub: User[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
+  otherSub: User[];
+
 }
 export const UserSchema = SchemaFactory.createForClass(User);

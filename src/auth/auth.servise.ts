@@ -160,4 +160,28 @@ export class Authprovider {
       };
     }
   }
+  async subscript(requesterId, subId): Promise<void> {
+    try {
+      const me = await this.userModel.findOne({ _id: requesterId });
+      const other = await this.userModel.findOne({ _id: subId });
+      me.Isub.push(other._id);
+      other.otherSub.push(me._id);
+      await me.save();
+      await other.save();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+  async unSubscript(requesterId, subId): Promise<void> {
+    try {
+      const me = await this.userModel.findOne({ _id: requesterId });
+      const other = await this.userModel.findOne({ _id: subId });
+      me.Isub=me.Isub.filter((el)=>String(el) != String(other._id));
+      other.otherSub=other.otherSub.filter((el)=>String(el) != String(me._id));
+      await me.save();
+      await other.save();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

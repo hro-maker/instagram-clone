@@ -36,4 +36,16 @@ export class AuthController {
   confirm(@Body(){code,email}) {
     return this.authservise.emailconfirm(email,code);
   }
+
+  @Patch('/subscr')
+  @UseGuards(AuthGuard)
+  subscrip(@Body()dto,@Req()req){
+      return this.authservise.subscript(req.userId,dto.userId)
+  }
+
+  @Patch('/unsubscr')
+  @UseGuards(AuthGuard)
+  unsubscrip(@Body()dto,@Req()req){
+      return this.authservise.unSubscript(req.userId,dto.userId)
+  }
 }
