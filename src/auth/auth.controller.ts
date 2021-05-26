@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Req,
+  Res,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -24,8 +25,8 @@ export class AuthController {
     return this.authservise.register(dto, files.foto);
   }
   @Post('/login')
-  login(@Body() dto: logindto) {
-    return this.authservise.login(dto);
+  login(@Body() dto: logindto,@Res()res) {
+    return this.authservise.login(dto,res);
   }
   @Patch('/update')
   @UseGuards(AuthGuard)

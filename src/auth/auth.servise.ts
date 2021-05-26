@@ -94,7 +94,7 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  async login(dto: logindto): Promise<loginresponse> {
+  async login(dto: logindto,res): Promise<loginresponse> {
     try {
       const user = await this.userModel
         .findOne({ email: dto.email })
@@ -119,9 +119,16 @@ export class Authprovider {
         process.env.JWT_SECRET,
         { expiresIn: '1h' },
       );
-      return { token, user };
+      res.cookie('token', token, {
+        expires: new Date(new Date().getTime() + 30 * 1000),
+        sameSite: 'strict',
+        httpOnly: true,
+      });
+      return res.status(200).json({token})
+      // return { token, user };
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    return res.status(400).json(error.message)
+      // throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
   async updateprofile(dto: any, file, id) {
@@ -184,11 +191,9 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-
  async me(userId){
     return await this.userModel.findOne({_id:userId}).populate('posts','imageUrl _id').populate('Isub')
   }
-
  async getISubscripers(userId){
       try {
           const user=await this.userModel.findOne({_id:userId}).populate('Isub', 'name surename avatar _id')
@@ -205,4 +210,5 @@ async  getOtherSubscripers(userId){
     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   }
   }
+  
 }
