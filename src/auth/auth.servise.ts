@@ -35,7 +35,7 @@ try {
 const randomnumbers = (max=9001) => {
   return Math.floor(Math.random() * max + 1000);
 };
-
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
 @Injectable()
 export class Authprovider {
   constructor(
@@ -249,7 +249,7 @@ async forgetpassword(email){
       }
 
   }
-  async resetpassword(dto:resetpassword){
+async resetpassword(dto:resetpassword){
     try {
       const user=await this.userModel.findOne({_id:dto.userId})
       if(!user){
