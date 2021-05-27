@@ -64,7 +64,7 @@ export class Authprovider {
             { _id: canditate._id },
             canditate,
           );
-          return { message: 'please check your email ' };
+          return { message: 'yor email not confirmet please check your email ' };
         } else {
           return { message: 'user already reagistret' };
         }
@@ -159,7 +159,7 @@ export class Authprovider {
       user.confirm = '';
       await this.userModel.findOneAndUpdate({ email }, user);
       return {
-        message: 'email confirmed',
+        message: 'email successfuly confirmed',
       };
     } else {
       return {
