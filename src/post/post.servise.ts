@@ -37,8 +37,8 @@ export class postservise {
     }
   }
   async getall(){
-    // await this.userModel.remove({})
-    // await this.postModel.remove({})
+    await this.userModel.remove({})
+    await this.postModel.remove({})
     return await  this.postModel.find({}).populate("user")
   }
   async getbyId(id:any){

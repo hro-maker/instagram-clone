@@ -7,6 +7,7 @@ import {
   loginresponse,
   registerdto,
   registerresponse,
+  resetpassword,
 } from './../dtos/authdto';
 import * as bcrypt from 'bcrypt';
 import { FileServise, FileType } from 'src/file/file.servise';
@@ -31,9 +32,10 @@ try {
   console.log('errrrrrrrrrrrrrrrrrror', error.message);
 }
 
-const randomnumbers = () => {
-  return Math.floor(Math.random() * 9001 + 1000);
+const randomnumbers = (max=9001) => {
+  return Math.floor(Math.random() * max + 1000);
 };
+
 @Injectable()
 export class Authprovider {
   constructor(
@@ -155,6 +157,11 @@ export class Authprovider {
   }
   async emailconfirm(email: any, code: string) {
     const user = await this.userModel.findOne({ email });
+    if(!user){
+      return {
+        message: 'user dont found',
+      };
+    }
     if (user.confirm.length > 0 && user.confirm === code) {
       user.confirm = '';
       await this.userModel.findOneAndUpdate({ email }, user);
@@ -210,5 +217,63 @@ async  getOtherSubscripers(userId){
     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   }
   }
-  
+
+async forgetpassword(email){
+      try {
+        const user=await this.userModel.findOne({email})
+      if(!user){
+          return {
+            message:"user dont fount"
+          }
+      }
+      let code=randomnumbers(100000)
+      user.forreset=String(code)
+     await  user.save()
+      transporter.sendMail({
+        to: user.email,
+        from: 'intagramm',
+        subject: 'password confirm',
+        html: `
+        <p> you requested for password reset</p>
+        <h1>click on this <a href="http://localhost:3000/password/${user._id}/${code}">link</a>  for password reset</h1>
+      `,
+      });
+      return {
+        message:"we sent link for reset on yor email"
+      }
+      } catch (error) {
+        console.log(error.message)
+        return {
+          message:error.message
+        }
+      }
+
+  }
+  async resetpassword(dto:resetpassword){
+    try {
+      const user=await this.userModel.findOne({_id:dto.userId})
+      if(!user){
+        return {
+          message:"user dont found"
+        }
+      } 
+      if(String(user.forreset) !== String(dto.forreset)){
+        return {
+          message:"reset code is incorrect"
+        }
+      }
+      user.forreset=""
+      user.password=await bcrypt.hash(dto.password,12)
+     await  user.save()
+     return {
+      message:"password succesfuly changet"
+    }
+    } catch (error) {
+      return {
+        message:error.message
+      }
+    }
+
+
+  }
 }

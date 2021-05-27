@@ -18,3 +18,8 @@ export interface loginresponse{
 export interface registerresponse{
     message:string
 }
+export interface resetpassword{
+    userId:string
+    password:string
+    forreset:string
+}

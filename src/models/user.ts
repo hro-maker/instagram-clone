@@ -19,6 +19,9 @@ export class User {
   @Prop({ type: String ,default:""})
   confirm: string;
 
+  @Prop({ type: String ,default:""})
+  forreset: string;
+
   @Prop({ type: String, required: true })
   password: string;
 

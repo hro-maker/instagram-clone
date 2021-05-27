@@ -12,7 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Authprovider } from './auth.servise';
-import { logindto, registerdto } from './../dtos/authdto';
+import { logindto, registerdto, resetpassword } from './../dtos/authdto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/utiles/guards/canactivate';
 
@@ -67,6 +67,16 @@ export class AuthController {
   @UseGuards(AuthGuard)
   othersub(@Param() {id}){
       return this.authservise.getOtherSubscripers(id)
+  }
+
+  @Patch('/forgot')
+  forgot(@Body()dto){
+      return this.authservise.forgetpassword(dto.email)
+  }
+
+  @Patch('/reset')
+  reset(@Body()dto:resetpassword){
+      return this.authservise.resetpassword(dto)
   }
 
 }
