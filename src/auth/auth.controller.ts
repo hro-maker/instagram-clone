@@ -84,4 +84,11 @@ export class AuthController {
       return this.authservise.resetpassword(dto)
   }
 
+  @Get('/sub/posts')
+  @UseGuards(AuthGuard)
+  subposts(@Req()req){
+    console.log("useridddd",req.userId)
+      return this.authservise.subscripersposts(req.userId)
+  }
+
 }

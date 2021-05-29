@@ -278,10 +278,29 @@ async resetpassword(dto:resetpassword){
   }
   async  userbyId(userId){
     try {
+     
       const user=await this.userModel.findOne({_id:userId}).populate('posts','imageUrl likes coments _id')
       return user
   } catch (error) {
+    console.log(error.message)
     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
   }
+  }
+
+  async subscripersposts(userId:string){
+        try {
+          const me=await this.userModel.findOne({_id:userId})
+          let posts=[]
+          me.Isub.forEach(async(el)=>{
+          const user=await this.userModel.findOne({_id:el})
+                const userposts=await this.postModel.find({user:user._id}).populate("user"," name surename avatar _id")
+                posts=[...posts,userposts]
+          })
+          const myposts=await this.postModel.find({user:me._id}).populate("user"," name surename avatar _id")
+          posts=[...posts,...myposts]
+          return posts
+        } catch (error) {
+          console.log(error.message)
+        }
   }
 }
