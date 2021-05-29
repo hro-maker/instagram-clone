@@ -276,4 +276,12 @@ async resetpassword(dto:resetpassword){
 
 
   }
+  async  userbyId(userId){
+    try {
+      const user=await this.userModel.findOne({_id:userId}).populate('posts','imageUrl likes coments _id')
+      return user
+  } catch (error) {
+    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+  }
+  }
 }

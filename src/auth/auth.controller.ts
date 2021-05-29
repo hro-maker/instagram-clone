@@ -68,6 +68,11 @@ export class AuthController {
   othersub(@Param() {id}){
       return this.authservise.getOtherSubscripers(id)
   }
+  @Get('/user/:id')
+  @UseGuards(AuthGuard)
+  userbyid(@Param() {id}){
+      return this.authservise.userbyId(id)
+  }
 
   @Patch('/forgot')
   forgot(@Body()dto){
