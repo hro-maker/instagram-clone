@@ -199,7 +199,7 @@ export class Authprovider {
     }
   }
  async me(userId){
-    return await this.userModel.findOne({_id:userId}).populate('posts','imageUrl _id').populate('Isub')
+    return await this.userModel.findOne({_id:userId}).populate('posts','imageUrl likes coments _id').populate('Isub')
   }
  async getISubscripers(userId){
       try {
