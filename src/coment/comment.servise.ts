@@ -23,7 +23,7 @@ export class Commentservise{
         const coment=await this.comentmodel.create({...dto,userId})   
         post.coments.push(coment._id)
         await post.save()
-        return coment
+        return post
        } catch (error) {
         throw new BadRequestException(error.message)
        }         

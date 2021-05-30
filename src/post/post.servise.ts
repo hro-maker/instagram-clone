@@ -61,7 +61,7 @@ export class postservise {
 
   async togglepostlike(postId:string,userId){
           try {
-            const post=await this.postModel.findOne({_id:postId})
+            const post=await this.postModel.findOne({_id:postId}).populate("user"," name surename avatar _id")
             if(!post.likes.includes(userId)){
                 post.likes.push(userId)
             }else{
