@@ -12,10 +12,9 @@ export class ComentController {
             return this.comentservise.createcomment(dto,req.userId)
     }
 
-    @Delete("/delete")
+    @Post("/delete")
     @UseGuards(AuthGuard)
     deletepost(@Body()dto,@Req()req){
-        //     console.log(req.userId)
            return this.comentservise.deletecoment(dto.comentId,dto.postId,req.userId)
     }
     @Get('/getcoments/:postid')

@@ -27,6 +27,7 @@ export class postservise {
             user: dto.userId,
             imageUrl,
             description: dto.description,
+            createdAt:new Date(Date.now())
           });
           await post.populate("user")
           user.posts.push(post._id)

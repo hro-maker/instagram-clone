@@ -20,7 +20,7 @@ export class Commentservise{
         if(!post){
             throw new BadRequestException("post dont found")
         }
-        const coment=await this.comentmodel.create({...dto,userId})   
+        const coment=await this.comentmodel.create({...dto,userId,createdAt:new Date(Date.now())})   
         post.coments.push(coment._id)
         await post.save()
         return {post,coment}
