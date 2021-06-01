@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { createcomentdto } from './../dtos/commentdtos';
 import { Commentservise } from './comment.servise';
 import { AuthGuard } from './../utiles/guards/canactivate';
@@ -17,5 +17,9 @@ export class ComentController {
     deletepost(@Body()dto,@Req()req){
         //     console.log(req.userId)
            return this.comentservise.deletecoment(dto.comentId,dto.postId,req.userId)
+    }
+    @Get('/getcoments/:postid')
+    getcomentsbypostid(@Param() {postid}){
+       return this.comentservise.comentsbypostid(postid)      
     }
 }

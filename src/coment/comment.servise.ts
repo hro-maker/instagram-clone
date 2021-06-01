@@ -16,14 +16,14 @@ export class Commentservise{
       ) {}
     async createcomment(dto:createcomentdto,userId:any){
        try {
-        const post=await this.postModel.findOne({_id:dto.postId})
+        const post=await this.postModel.findOne({_id:dto.postId}).populate("user"," name surename avatar _id")
         if(!post){
             throw new BadRequestException("post dont found")
         }
         const coment=await this.comentmodel.create({...dto,userId})   
         post.coments.push(coment._id)
         await post.save()
-        return post
+        return {post,coment}
        } catch (error) {
         throw new BadRequestException(error.message)
        }         
@@ -47,5 +47,14 @@ export class Commentservise{
            } catch (error) {
             throw new BadRequestException(error.message)
            }
+    }
+    async comentsbypostid(postId){
+       try {
+        const coments=await this.comentmodel.find({postId}).populate('userId','name surename _id avatar')
+        console.log(coments)
+        return coments
+       } catch (error) {
+           console.log(error.message)
+       }
     }
 }
