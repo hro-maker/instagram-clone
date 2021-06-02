@@ -279,7 +279,7 @@ async resetpassword(dto:resetpassword){
   async  userbyId(userId){
     try {
      
-      const user=await this.userModel.findOne({_id:userId}).populate('posts','imageUrl likes coments _id')
+      const user=await this.userModel.findOne({_id:userId}).populate('posts','imageUrl likes coments _id createdAt')
       return user
   } catch (error) {
     console.log(error.message)

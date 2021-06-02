@@ -11,7 +11,6 @@ export class ComentController {
     createpost(@Body()dto:createcomentdto,@Req()req){
             return this.comentservise.createcomment(dto,req.userId)
     }
-
     @Post("/delete")
     @UseGuards(AuthGuard)
     deletepost(@Body()dto,@Req()req){
@@ -20,5 +19,10 @@ export class ComentController {
     @Get('/getcoments/:postid')
     getcomentsbypostid(@Param() {postid}){
        return this.comentservise.comentsbypostid(postid)      
+    }
+    @Post('/toglelike')
+    @UseGuards(AuthGuard)
+    togglepostlike(@Body()dto,@Req() req:any){
+        return this.comentservise.togglecommentlike(dto.comentId,req.userId)
     }
 }

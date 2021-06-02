@@ -43,7 +43,7 @@ export class postservise {
     return await  this.postModel.find({}).populate("user")
   }
   async getbyId(id:any){
-    return await  this.postModel.findOne({_id:id}).populate("user","avatar name _id")
+    return await  this.postModel.findOne({_id:id}).populate("user","avatar surename name _id")
   }
   async updatedescription(dto:updatepostdto,userId:any):Promise<Post>{
   try {

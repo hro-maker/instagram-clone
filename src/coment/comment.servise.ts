@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Coment, ComentDocument } from "src/models/comentschema";
@@ -57,4 +57,19 @@ export class Commentservise{
            console.log(error.message)
        }
     }
+
+    async togglecommentlike(comentId:string,userId){
+        try {
+          const coment=await this.comentmodel.findOne({_id:comentId}).populate("userId"," name surename avatar _id")
+          if(!coment.likes.includes(userId)){
+              coment.likes.push(userId)
+          }else{
+               coment.likes=coment.likes.filter((el)=>el != userId) 
+          }
+          await coment.save()
+          return coment
+        } catch (error) {
+          throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+}
 }
