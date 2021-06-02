@@ -87,7 +87,6 @@ export class AuthController {
   @Get('/sub/posts')
   @UseGuards(AuthGuard)
   subposts(@Req()req){
-    console.log("useridddd",req.userId)
       return this.authservise.subscripersposts(req.userId)
   }
 

@@ -38,9 +38,7 @@ export class Commentservise{
                 throw new BadRequestException("action dont alloed")
             }
             const post =await this.postModel.findOne({_id:postId})
-            console.log("aaaaaaaaa",post.coments,coment._id)
             post.coments=post.coments.filter((el)=>String(el) != String(coment._id))
-            console.log("ssssss",post.coments)
             await post.save()
             await this.comentmodel.findOneAndDelete({_id:coment._id})
             return {message:"coment deleted"}

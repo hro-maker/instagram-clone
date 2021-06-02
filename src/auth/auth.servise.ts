@@ -32,10 +32,10 @@ try {
   console.log('errrrrrrrrrrrrrrrrrror', error.message);
 }
 
-const randomnumbers = (max=9001) => {
+const randomnumbers = (max = 9001) => {
   return Math.floor(Math.random() * max + 1000);
 };
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 @Injectable()
 export class Authprovider {
   constructor(
@@ -66,7 +66,9 @@ export class Authprovider {
             { _id: canditate._id },
             canditate,
           );
-          return { message: 'yor email not confirmet please check your email ' };
+          return {
+            message: 'yor email not confirmet please check your email ',
+          };
         } else {
           return { message: 'user already reagistret' };
         }
@@ -96,7 +98,7 @@ export class Authprovider {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  async login(dto: logindto,res): Promise<loginresponse> {
+  async login(dto: logindto, res): Promise<loginresponse> {
     try {
       const user = await this.userModel
         .findOne({ email: dto.email })
@@ -126,10 +128,10 @@ export class Authprovider {
         sameSite: 'strict',
         httpOnly: true,
       });
-      return res.status(200).json({token})
+      return res.status(200).json({ token });
       // return { token, user };
     } catch (error) {
-    return res.status(400).json(error.message)
+      return res.status(400).json(error.message);
       // throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
@@ -157,7 +159,7 @@ export class Authprovider {
   }
   async emailconfirm(email: any, code: string) {
     const user = await this.userModel.findOne({ email });
-    if(!user){
+    if (!user) {
       return {
         message: 'user dont found',
       };
@@ -190,45 +192,54 @@ export class Authprovider {
     try {
       const me = await this.userModel.findOne({ _id: requesterId });
       const other = await this.userModel.findOne({ _id: subId });
-      me.Isub=me.Isub.filter((el)=>String(el) != String(other._id));
-      other.otherSub=other.otherSub.filter((el)=>String(el) != String(me._id));
+      me.Isub = me.Isub.filter((el) => String(el) != String(other._id));
+      other.otherSub = other.otherSub.filter(
+        (el) => String(el) != String(me._id),
+      );
       await me.save();
       await other.save();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
- async me(userId){
-    return await this.userModel.findOne({_id:userId}).populate('posts','imageUrl likes coments _id').populate('Isub')
+  async me(userId) {
+    return await this.userModel
+      .findOne({ _id: userId })
+      .populate('posts', 'imageUrl likes coments _id')
+      .populate('Isub');
   }
- async getISubscripers(userId){
-      try {
-          const user=await this.userModel.findOne({_id:userId}).populate('Isub', 'name surename avatar _id')
-          return user.Isub
-      } catch (error) {
-        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-      }
-  }
-async  getOtherSubscripers(userId){
+  async getISubscripers(userId) {
     try {
-      const user=await this.userModel.findOne({_id:userId}).populate('otherSub', 'name surename avatar _id')
-      return user.otherSub
-  } catch (error) {
-    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      const user = await this.userModel
+        .findOne({ _id: userId })
+        .populate('Isub', 'name surename avatar _id');
+      return user.Isub;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
+  async getOtherSubscripers(userId) {
+    try {
+      const user = await this.userModel
+        .findOne({ _id: userId })
+        .populate('otherSub', 'name surename avatar _id');
+      return user.otherSub;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
-async forgetpassword(email){
-      try {
-        const user=await this.userModel.findOne({email})
-      if(!user){
-          return {
-            message:"user dont fount"
-          }
+  async forgetpassword(email) {
+    try {
+      const user = await this.userModel.findOne({ email });
+      if (!user) {
+        return {
+          message: 'user dont fount',
+        };
       }
-      let code=randomnumbers(100000)
-      user.forreset=String(code)
-     await  user.save()
+      let code = randomnumbers(100000);
+      user.forreset = String(code);
+      await user.save();
       transporter.sendMail({
         to: user.email,
         from: 'intagramm',
@@ -239,68 +250,71 @@ async forgetpassword(email){
       `,
       });
       return {
-        message:"we sent link for reset on yor email"
-      }
-      } catch (error) {
-        console.log(error.message)
-        return {
-          message:error.message
-        }
-      }
-
-  }
-async resetpassword(dto:resetpassword){
-    try {
-      const user=await this.userModel.findOne({_id:dto.userId})
-      if(!user){
-        return {
-          message:"user dont found"
-        }
-      } 
-      if(String(user.forreset) !== String(dto.forreset)){
-        return {
-          message:"reset code is incorrect"
-        }
-      }
-      user.forreset=""
-      user.password=await bcrypt.hash(dto.password,12)
-     await  user.save()
-     return {
-      message:"password succesfuly changet"
+        message: 'we sent link for reset on yor email',
+      };
+    } catch (error) {
+      console.log(error.message);
+      return {
+        message: error.message,
+      };
     }
+  }
+  async resetpassword(dto: resetpassword) {
+    try {
+      const user = await this.userModel.findOne({ _id: dto.userId });
+      if (!user) {
+        return {
+          message: 'user dont found',
+        };
+      }
+      if (String(user.forreset) !== String(dto.forreset)) {
+        return {
+          message: 'reset code is incorrect',
+        };
+      }
+      user.forreset = '';
+      user.password = await bcrypt.hash(dto.password, 12);
+      await user.save();
+      return {
+        message: 'password succesfuly changet',
+      };
     } catch (error) {
       return {
-        message:error.message
-      }
+        message: error.message,
+      };
     }
-
-
   }
-  async  userbyId(userId){
+  async userbyId(userId) {
     try {
-     
-      const user=await this.userModel.findOne({_id:userId}).populate('posts','imageUrl likes coments _id createdAt')
-      return user
-  } catch (error) {
-    console.log(error.message)
-    throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      const user = await this.userModel
+        .findOne({ _id: userId })
+        .populate('posts', 'imageUrl likes coments _id createdAt');
+      return user;
+    } catch (error) {
+      console.log(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
-  }
+  async subscripersposts(userId: string) {
+    try {
+      const me = await this.userModel.findOne({ _id: userId });
+      let posts = [];
 
-  async subscripersposts(userId:string){
-        try {
-          const me=await this.userModel.findOne({_id:userId})
-          let posts=[]
-          me.Isub.forEach(async(el)=>{
-          const user=await this.userModel.findOne({_id:el})
-                const userposts=await this.postModel.find({user:user._id}).populate("user"," name surename avatar _id")
-                posts=[...posts,userposts]
-          })
-          const myposts=await this.postModel.find({user:me._id}).populate("user"," name surename avatar _id")
-          posts=[...posts,...myposts]
-          return posts
-        } catch (error) {
-          console.log(error.message)
-        }
+      for (let i = 0; i < me.Isub.length; i++) {
+        const el = me.Isub[i];
+        const user = await this.userModel.findOne({ _id: el });
+        const userposts = await this.postModel
+          .find({ user: user._id })
+          .populate('user', ' name surename avatar _id');
+        posts = [...posts, ...userposts];
+        const myposts = await this.postModel
+          .find({ user: me._id })
+          .populate('user', ' name surename avatar _id');
+        posts = [...posts, ...myposts];
+      }
+      return posts
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 }
