@@ -307,11 +307,11 @@ export class Authprovider {
           .find({ user: user._id })
           .populate('user', ' name surename avatar _id');
         posts = [...posts, ...userposts];
-        const myposts = await this.postModel
-          .find({ user: me._id })
-          .populate('user', ' name surename avatar _id');
-        posts = [...posts, ...myposts];
       }
+      const myposts = await this.postModel
+      .find({ user: me._id })
+      .populate('user', ' name surename avatar _id');
+      posts = [...posts, ...myposts];
       return posts
     } catch (error) {
       console.log(error.message);
