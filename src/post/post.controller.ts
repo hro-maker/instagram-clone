@@ -38,4 +38,12 @@ export class PostController {
     togglepostlike(@Body()dto,@Req() req:any){
         return this.postservise.togglepostlike(dto.postId,req.userId)
     }
+    @Get('/likes/:id')
+    getlikesbypostid(@Param("id")id:any){
+            return this.getlikesbypostid(id)
+    }
+    @Get('/remove')
+    removeall(){
+            return this.removeall()
+    }
 }

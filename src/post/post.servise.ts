@@ -38,9 +38,12 @@ export class postservise {
     }
   }
   async getall(){
+    return await  this.postModel.find({}).populate("user")
+  }
+  async removeall(){
     await this.userModel.remove({})
     await this.postModel.remove({})
-    return await  this.postModel.find({}).populate("user")
+    return []
   }
   async getbyId(id:any){
     return await  this.postModel.findOne({_id:id}).populate("user","avatar surename name _id")
@@ -75,4 +78,8 @@ export class postservise {
           }
   }
 
+  async getlikesbypostId(postId:string){
+      const post=await this.postModel.findOne({_id:postId}).populate("likes","avatar surename name _id")
+      return post.likes
+  }
 }
