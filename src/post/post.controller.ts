@@ -40,10 +40,10 @@ export class PostController {
     }
     @Get('/likes/:id')
     getlikesbypostid(@Param("id")id:any){
-            return this.getlikesbypostid(id)
+            return this.postservise.getlikesbypostId(id)
     }
     @Get('/remove')
     removeall(){
-            return this.removeall()
+            return this.postservise.removeall()
     }
 }

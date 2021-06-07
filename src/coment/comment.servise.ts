@@ -70,4 +70,8 @@ export class Commentservise{
           throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
 }
+async getlikesbycommentId(commentId:string){
+    const post=await this.comentmodel.findOne({_id:commentId}).populate("likes","avatar surename name _id")
+    return post.likes
+}
 }

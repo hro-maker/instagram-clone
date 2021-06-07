@@ -25,4 +25,8 @@ export class ComentController {
     togglepostlike(@Body()dto,@Req() req:any){
         return this.comentservise.togglecommentlike(dto.comentId,req.userId)
     }
+    @Get('/likes/:id')
+    getlikesbycommentid(@Param("id")id:any){
+            return this.comentservise.getlikesbycommentId(id)
+    }
 }
