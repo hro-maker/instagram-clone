@@ -83,7 +83,11 @@ export class AuthController {
   reset(@Body()dto:resetpassword){
       return this.authservise.resetpassword(dto)
   }
-
+  @Patch('/savepost')
+  @UseGuards(AuthGuard)
+  save(@Body()dto:{postId:string},req:any){
+      return this.authservise.savepost(dto.postId,req.userId)
+  }
   @Get('/sub/posts')
   @UseGuards(AuthGuard)
   subposts(@Req()req){

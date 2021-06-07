@@ -28,11 +28,11 @@ export class postservise {
             imageUrl,
             description: dto.description,
             createdAt:new Date(Date.now())
-          });
-          await post.populate("user")
+          })
           user.posts.push(post._id)
           await user.save()
-          return post;
+          const newpostt=await this.postModel.findOne({_id:post._id}).populate("user","avatar surename name _id")
+          return newpostt;
     } catch (error) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -81,5 +81,15 @@ export class postservise {
   async getlikesbypostId(postId:string){
       const post=await this.postModel.findOne({_id:postId}).populate("likes","avatar surename name _id")
       return post.likes
+  }
+  async deletepost(postId):Promise<boolean>{
+      try {
+        const post=await this.postModel.findOne({_id:postId})
+      this.fileservise.removeFile(post.imageUrl)
+      await this.postModel.findOneAndDelete({_id:postId})
+      return true
+      } catch (error) {
+          return false
+      }
   }
 }

@@ -36,6 +36,9 @@ export class User {
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],default:[] })
   posts: Post[];
+  
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],default:[] })
+  saved: Post[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
   Isub: User[];

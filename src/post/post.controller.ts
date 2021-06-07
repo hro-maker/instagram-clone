@@ -46,4 +46,8 @@ export class PostController {
     removeall(){
             return this.postservise.removeall()
     }
+    @Get('/removebyid/:id')
+    remove(@Param("id")id:any){
+            return this.postservise.deletepost(id)
+    }
 }

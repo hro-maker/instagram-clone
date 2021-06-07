@@ -317,4 +317,22 @@ export class Authprovider {
       console.log(error.message);
     }
   }
+  async savepost(postId,userId):Promise<boolean>{
+        try {
+          const post=await this.postModel.findOne({_id:postId})
+        if(!post){
+          throw new HttpException("post dont fount",HttpStatus.BAD_REQUEST)
+        }
+        const me=await this.userModel.findOne({_id:userId})
+        if(me.saved.some(el=>String(el)===String(post._id))){
+              me.saved=me.saved.filter(el=>String(el)===String(post._id))
+        }else{
+              me.saved.push(post._id)
+        }
+        await me.save()
+          return true
+        } catch (error) {
+          throw new HttpException(error.message,HttpStatus.BAD_REQUEST)
+        }
+  }
 }
