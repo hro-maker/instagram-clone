@@ -206,7 +206,6 @@ export class Authprovider {
     return await this.userModel
       .findOne({ _id: userId })
       .populate('posts', 'imageUrl likes coments _id')
-      .populate('saved', 'imageUrl likes coments _id')
       .populate('Isub');
   }
   async getISubscripers(userId) {
@@ -289,7 +288,8 @@ export class Authprovider {
     try {
       const user = await this.userModel
         .findOne({ _id: userId })
-        .populate('posts', 'imageUrl likes coments _id createdAt');
+        .populate('posts', 'imageUrl likes coments _id createdAt')
+        .populate('saved', 'imageUrl likes coments _id');
       return user;
     } catch (error) {
       console.log(error.message);
@@ -310,30 +310,31 @@ export class Authprovider {
         posts = [...posts, ...userposts];
       }
       const myposts = await this.postModel
-      .find({ user: me._id })
-      .populate('user', ' name surename avatar _id');
+        .find({ user: me._id })
+        .populate('user', ' name surename avatar _id');
       posts = [...posts, ...myposts];
-      return posts
+      return posts;
     } catch (error) {
       console.log(error.message);
     }
   }
-  async savepost(postId,userId):Promise<boolean>{
-        try {
-          const post=await this.postModel.findOne({_id:postId})
-        if(!post){
-          throw new HttpException("post dont fount",HttpStatus.BAD_REQUEST)
-        }
-        const me=await this.userModel.findOne({_id:userId})
-        if(me.saved.some(el=>String(el)===String(post._id))){
-              me.saved=me.saved.filter(el=>String(el)!==String(post._id))
-        }else{
-              me.saved.push(post._id)
-        }
-        await me.save()
-          return true
-        } catch (error) {
-          throw new HttpException(error.message,HttpStatus.BAD_REQUEST)
-        }
+  async savepost(postId, userId): Promise<boolean> {
+    try {
+      const post = await this.postModel.findOne({ _id: postId });
+      if (!post) {
+        throw new HttpException('post dont fount', HttpStatus.BAD_REQUEST);
+      }
+      const me = await this.userModel.findOne({ _id: userId });
+      if (me.saved.some((el) => String(el) === String(post._id))) {
+        me.saved = me.saved.filter((el) => String(el) !== String(post._id));
+      } else {
+        me.saved.push(post._id);
+      }
+      console.log(me);
+      await me.save();
+      return true;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
