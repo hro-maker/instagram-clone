@@ -206,6 +206,7 @@ export class Authprovider {
     return await this.userModel
       .findOne({ _id: userId })
       .populate('posts', 'imageUrl likes coments _id')
+      .populate('saved', 'imageUrl likes coments _id')
       .populate('Isub');
   }
   async getISubscripers(userId) {
@@ -325,7 +326,7 @@ export class Authprovider {
         }
         const me=await this.userModel.findOne({_id:userId})
         if(me.saved.some(el=>String(el)===String(post._id))){
-              me.saved=me.saved.filter(el=>String(el)===String(post._id))
+              me.saved=me.saved.filter(el=>String(el)!==String(post._id))
         }else{
               me.saved.push(post._id)
         }

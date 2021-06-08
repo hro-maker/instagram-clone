@@ -85,7 +85,7 @@ export class AuthController {
   }
   @Patch('/savepost')
   @UseGuards(AuthGuard)
-  save(@Body()dto:{postId:string},req:any){
+  save(@Body()dto:{postId:string},@Req()req){
       return this.authservise.savepost(dto.postId,req.userId)
   }
   @Get('/sub/posts')
