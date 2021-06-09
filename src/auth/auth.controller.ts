@@ -12,7 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Authprovider } from './auth.servise';
-import { logindto, registerdto, resetpassword } from './../dtos/authdto';
+import { changepassword, logindto, registerdto, resetpassword } from './../dtos/authdto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/utiles/guards/canactivate';
 
@@ -28,10 +28,11 @@ export class AuthController {
   login(@Body() dto: logindto,@Res()res) {
     return this.authservise.login(dto,res);
   }
-  @Patch('/update')
+  @Post('/update')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileFieldsInterceptor([{ name: 'foto', maxCount: 1 }]))
   updateprofile(@Body() dto: any, @Req() req: any, @UploadedFiles() files) {
+    console.log(dto)
     return this.authservise.updateprofile(dto, files, req.userId);
   }
   @Patch('/confirm')
@@ -92,6 +93,11 @@ export class AuthController {
   @UseGuards(AuthGuard)
   subposts(@Req()req){
       return this.authservise.subscripersposts(req.userId)
+  }
+  @Patch('/password/change')
+  @UseGuards(AuthGuard)
+  chnagepassword(@Body()dto:changepassword,@Req()req){
+    return this.authservise.changepassword(dto,req.userId)
   }
 
 }

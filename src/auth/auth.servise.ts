@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/models/user';
 import {
+  changepassword,
   logindto,
   loginresponse,
   registerdto,
@@ -137,8 +138,9 @@ export class Authprovider {
   }
   async updateprofile(dto: any, file, id) {
     try {
+      console.log(dto.name,file)
       let user = await this.userModel.findOne({ _id: id });
-      if (file.foto) {
+      if (file?.foto) {
         if (user.avatar.length > 1) {
           this.fileservise.removeFile(user.avatar);
         }
@@ -335,6 +337,22 @@ export class Authprovider {
       return true;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+  async changepassword(dto:changepassword,userId):Promise<{message:string}>{
+    try {
+      const user = await this.userModel
+    .findOne({_id:userId })
+    const validpassword = await bcrypt.compare(dto.old, user.password);
+          if(validpassword){
+            const newpassword=  await bcrypt.hash(dto.new, 12);
+            user.password=newpassword
+            await user.save()
+            return {message:"password changed successfuly"}
+          }
+          return {message:"old password is incorrect"}
+    } catch (error) {
+      return {message:error.message}
     }
   }
 }

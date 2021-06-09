@@ -23,3 +23,7 @@ export interface resetpassword{
     password:string
     forreset:string
 }
+export interface changepassword{
+    old:string,
+    new:string
+}
