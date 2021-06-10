@@ -355,4 +355,14 @@ export class Authprovider {
       return {message:error.message}
     }
   }
+  async getusersbysharacters(chars:string){
+          try {
+            let users=await this.userModel.find()
+            users=users.filter((el)=>el.name.includes(chars) || el.surename.includes(chars))
+            return users
+          } catch (error) {
+              console.log(Date.now(),error.message)
+          }
+
+  }
 }

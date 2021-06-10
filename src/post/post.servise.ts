@@ -50,8 +50,8 @@ export class postservise {
   }
   async updatedescription(dto:updatepostdto,userId:any):Promise<Post>{
   try {
-    const post= await this.postModel.findOne({_id:dto.id}).populate("user","avatar surename name _id")
-    if(String(post.user) != String(userId)){
+    const post:any= await this.postModel.findOne({_id:dto.id}).populate("user","avatar surename name _id")
+    if(String(post.user._id) != String(userId)){
      throw new HttpException("action dont alloed", HttpStatus.BAD_REQUEST);
     }
     post.description=dto.description;
