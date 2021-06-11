@@ -7,6 +7,7 @@ import * as path from 'path'
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PostModule } from './post/post.module';
 import { ComentModule } from './coment/coment.module';
+import { MessageModule } from './message/message.module';
 dotenv.config()
 @Module({
   imports: [
@@ -18,7 +19,8 @@ dotenv.config()
     ),
     AuthModule,
     PostModule,
-    ComentModule
+    ComentModule,
+    MessageModule
   ],
 })
 export class AppModule {}
