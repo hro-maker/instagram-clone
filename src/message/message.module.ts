@@ -4,6 +4,7 @@ import { Message, MessageSchema } from 'src/models/message';
 import { Room, RoomSchema } from 'src/models/room';
 import { User, UserSchema } from 'src/models/user';
 import { MessageController } from './message.controller';
+import { Messageservise } from './message.service';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MessageController } from './message.controller';
       { name: User.name, schema: UserSchema }
     ])
   ],
-  controllers: [MessageController]
+  controllers: [MessageController],
+  providers:[Messageservise]
 })
 export class MessageModule {}

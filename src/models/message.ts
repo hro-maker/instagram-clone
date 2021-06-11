@@ -17,6 +17,8 @@ export class Message{
     
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     senter:User
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+    secnt:User
 
     @Prop({ type:Date,default:Date.now()})
     createdAt: Date;    
