@@ -9,6 +9,9 @@ export interface getmessages{
     messages:MessageDocument[],
     room:RoomDocument
 }
+export interface getrooms{
+    rooms:RoomDocument[]
+}
 @Injectable()
 export class Messageservise{
     constructor( 
@@ -47,6 +50,14 @@ export class Messageservise{
           throw new HttpException(error.message,HttpStatus.BAD_REQUEST)
        }
     }   
-    
-    
+    async getallchatrooms(myid):Promise<getrooms>{
+        const rooms=await this.RoomModel.find().populate('romusers','_id name surename avatar')
+        const reg = new RegExp(String(myid), 'g');
+        const myrooms=rooms.filter(el=>reg.test(el.users))
+        return {rooms:myrooms}
+    }
+    async remooveall(){
+            await this.Messagemodal.remove({})
+            await this.RoomModel.remove({})
+    }
 }
