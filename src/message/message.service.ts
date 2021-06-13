@@ -51,7 +51,10 @@ export class Messageservise{
        }
     }   
     async getallchatrooms(myid):Promise<getrooms>{
-        const rooms=await this.RoomModel.find().populate('romusers','_id name surename avatar')
+        const rooms=await this.RoomModel.find()
+        .populate('romusers','_id name surename avatar')
+        .populate('likes','_id name surename avatar')
+        
         const reg = new RegExp(String(myid), 'g');
         const myrooms=rooms.filter(el=>reg.test(el.users))
         return {rooms:myrooms}

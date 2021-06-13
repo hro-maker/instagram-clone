@@ -14,6 +14,9 @@ export class Message{
     
     @Prop({ type:String})
     text: String; 
+
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
+    likes: User[];
     
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     senter:User
