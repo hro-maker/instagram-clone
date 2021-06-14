@@ -54,9 +54,14 @@ export class Messageservise{
         const rooms=await this.RoomModel.find()
         .populate('romusers','_id name surename avatar')
         .populate('likes','_id name surename avatar')
-        
         const reg = new RegExp(String(myid), 'g');
         const myrooms=rooms.filter(el=>reg.test(el.users))
+        for (let i = 0; i < myrooms.length; i++) {
+          const lasmessage=  await this.Messagemodal
+            .findOne({romId:myrooms[i]._id})
+            .populate("senter",'_id name surename avatar')
+            myrooms[i]=Object.assign(myrooms[i],{last:lasmessage})
+        }
         return {rooms:myrooms}
     }
     async remooveall(){
