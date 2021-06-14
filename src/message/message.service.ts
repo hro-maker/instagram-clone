@@ -21,7 +21,7 @@ export class Messageservise{
          ){}
     async getmessage(Fuser,Suser):Promise<getmessages>{
        try {
-        const rooms= await this.RoomModel.find().populate('romusers','_id name surename avatar')
+        const rooms= await this.RoomModel.find().populate('romusers','_id name surename avatar isActive')
         const firstregex = new RegExp(String(Fuser), 'g');
         const secntregex = new RegExp(String(Suser), 'g');
          const room=rooms.filter(el=>firstregex.test(el.users) && secntregex.test(el.users))[0]
@@ -52,16 +52,11 @@ export class Messageservise{
     }   
     async getallchatrooms(myid):Promise<getrooms>{
         const rooms=await this.RoomModel.find()
-        .populate('romusers','_id name surename avatar')
+        .populate('romusers','_id name surename avatar isActive')
         .populate('likes','_id name surename avatar')
+        
         const reg = new RegExp(String(myid), 'g');
-        const myrooms=rooms.filter(el=>reg.test(el.users))
-        for (let i = 0; i < myrooms.length; i++) {
-          const lasmessage=  await this.Messagemodal
-            .findOne({romId:myrooms[i]._id})
-            .populate("senter",'_id name surename avatar')
-            myrooms[i]=Object.assign(myrooms[i],{last:lasmessage})
-        }
+        const myrooms:any=rooms.filter(el=>el.users.includes(String(myid)))
         return {rooms:myrooms}
     }
     async remooveall(){
