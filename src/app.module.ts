@@ -12,6 +12,8 @@ import { SocketModule } from './message/messagemodule';
 dotenv.config()
 @Module({
   imports: [
+    
+    SocketModule,
   ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, 'static')}),
     MongooseModule.forRoot(
       `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.3l6j1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,{
@@ -22,7 +24,6 @@ dotenv.config()
     PostModule,
     ComentModule,
     MessageModule,
-    SocketModule
   ],
 })
 export class AppModule {}

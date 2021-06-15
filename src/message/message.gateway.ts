@@ -1,34 +1,36 @@
-import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WebSocketServer, OnGatewayConnection } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
-import { Logger } from '@nestjs/common';
-
-@WebSocketGateway({ namespace: '/chat' })
-export class ChatGateway implements OnGatewayInit {
-
-  @WebSocketServer() wss: Server;
-
-  private logger: Logger = new Logger('ChatGateway');
-
-  afterInit(server: any) {
-    this.logger.log('Initialized!');
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  OnGatewayInit,
+  WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+ } from '@nestjs/websockets';
+ import { Logger } from '@nestjs/common';
+ import { Socket, Server } from 'socket.io';
+ 
+ @WebSocketGateway()
+ export class ChatGateway  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+ 
+  @WebSocketServer() server: Server;
+  private logger: Logger = new Logger('AppGateway');
+ 
+  @SubscribeMessage('msgToServer')
+  handleMessage(client: Socket, payload: string): void {
+    console.log("hellllllllllllllllllllllllllllllllllllllllo")
+    this.logger.log('helllllllllllllllllllllllllllllllllllllllllo');
+   this.server.emit('msgToClient', payload);
   }
-
-  @SubscribeMessage('chatToServer')
-  handleMessage(client: Socket, message: { sender: string, room: string, message: string }) {
-    this.logger.log('ddddddddddddddddddddddddddddddddddddddddddddddddddddddddd!')
-    this.wss.to(message.room).emit('chatToClient', message);
+ 
+  afterInit(server: Server) {
+   this.logger.log('Init');
   }
-
-  @SubscribeMessage('joinRoom')
-  handleRoomJoin(client: Socket, room: string ) {
-    client.join(room);
-    client.emit('joinedRoom', room);
+ 
+  handleDisconnect(client: Socket) {
+   this.logger.log(`Client disconnected: ${client.id}`);
   }
-
-  @SubscribeMessage('leaveRoom')
-  handleRoomLeave(client: Socket, room: string ) {
-    client.leave(room);
-    client.emit('leftRoom', room);
+ 
+  handleConnection(client: Socket, ...args: any[]) {
+   this.logger.log(`Client connected: ${client.id}`);
   }
-
-}
+ }
