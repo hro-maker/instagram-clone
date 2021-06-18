@@ -3,7 +3,6 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Message, MessageSchema } from "src/models/message";
 import { Room, RoomSchema } from "src/models/room";
 import { User, UserSchema } from "src/models/user";
-import { SampleWsGateway } from "./message.gateway";
 
 @Module({
     imports: [
@@ -17,7 +16,6 @@ import { SampleWsGateway } from "./message.gateway";
         { name: User.name, schema: UserSchema }
       ])
     ],
-    providers:[SampleWsGateway]
   })
   export class SocketModule {}
   

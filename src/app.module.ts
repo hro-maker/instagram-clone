@@ -9,23 +9,22 @@ import { PostModule } from './post/post.module';
 import { ComentModule } from './coment/coment.module';
 import { MessageModule } from './message/message.module';
 import { SocketModule } from './message/messagemodule';
-import { SampleWsGateway } from './message/message.gateway';
+import { EventsGateway } from './socket/message.gateway';
+import { EventsModule } from './socket/events.module';
 dotenv.config()
 @Module({
-  imports: [
-  ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, 'static')}),
-    MongooseModule.forRoot(
-      `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.3l6j1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,{
-        useFindAndModify:false,
-      }
-    ),
-    AuthModule,
-    PostModule,
-    ComentModule,
-    MessageModule,
-  ],
-  providers:[
-    SampleWsGateway
-  ]
+imports:[EventsModule]
 })
 export class AppModule {}
+// imports: [
+//   ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, 'static')}),
+//     MongooseModule.forRoot(
+//       `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@cluster0.3l6j1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,{
+//         useFindAndModify:false,
+//       }
+//     ),
+//     AuthModule,
+//     PostModule,
+//     ComentModule,
+//     MessageModule,
+//   ],
