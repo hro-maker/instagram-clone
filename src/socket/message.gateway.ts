@@ -7,9 +7,11 @@ import {
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {Server} from 'socket.io'
+import { SocketServise } from './socket';
 
 @WebSocketGateway()
 export class EventsGateway {
+  constructor(private socketservise:SocketServise){}
   @WebSocketServer()
   server: Server;
 
@@ -20,8 +22,9 @@ export class EventsGateway {
   }
 
   @SubscribeMessage('message')
-  ev(client: any, data: any){
-    console.log("hellllllddddllllllllllllllllllllllllllllllllllllllllllllllll")
+ async ev(client: any, data: any){
+      const answer=await this.socketservise.sayhello()
+    console.log(answer)
    
   }
 }

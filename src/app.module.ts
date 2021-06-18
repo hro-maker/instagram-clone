@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv'
@@ -8,8 +7,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { PostModule } from './post/post.module';
 import { ComentModule } from './coment/coment.module';
 import { MessageModule } from './message/message.module';
-import { SocketModule } from './message/messagemodule';
-import { EventsGateway } from './socket/message.gateway';
 import { EventsModule } from './socket/events.module';
 dotenv.config()
 @Module({
@@ -25,6 +22,6 @@ dotenv.config()
           ComentModule,
           MessageModule,
              EventsModule
-        ],
+        ]
 })
 export class AppModule {}
