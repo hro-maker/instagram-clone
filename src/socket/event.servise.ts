@@ -12,7 +12,8 @@ export class SocketServise {
         @InjectModel(Message.name) private Messagemodal: Model<MessageDocument>,
         @InjectModel(Room.name) private RoomModel: Model<RoomDocument>,
         ){}
-       async sayhello(){
-            return "hello world"
-        }
+      async getrooms(){
+          const rooms=await this.RoomModel.find()
+          return rooms
+      }
 }

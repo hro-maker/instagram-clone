@@ -4,7 +4,7 @@ import { Message, MessageSchema } from 'src/models/message';
 import { Room, RoomSchema } from 'src/models/room';
 import { User, UserSchema } from 'src/models/user';
 import { EventsGateway } from './message.gateway';
-import { SocketServise } from './socket';
+import { SocketServise } from './event.servise';
 
 @Module({
   imports: [
