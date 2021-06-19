@@ -20,9 +20,20 @@ export class EventsGateway {
   @WebSocketServer()
   server: Server;
 
+  @SubscribeMessage('@Client:Join_room')
+  join(client: any, data: newmessage) {
+      client.join(data.roomId)
+  }
+
+  @SubscribeMessage('@Client:Leave_room')
+  leave(client: any, data: newmessage) {
+      client.leave(data.roomId)
+  }
+
   @SubscribeMessage('@Client:Sent_message')
   onEvent(client: any, data: newmessage) {
    this.server.to(data.roomId).emit('@server:Sent_message')
   }
+
 
 }
