@@ -8,9 +8,9 @@ import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {Server} from 'socket.io'
 import { SocketServise } from './event.servise';
-interface newmessage{
+export interface newmessage{
   text: string,
-  roomId: string,
+  romId: string,
   senter: string,
   secnt: string
 }
@@ -20,20 +20,9 @@ export class EventsGateway {
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('@Client:Join_room')
-  join(client: any, data: newmessage) {
-      client.join(data.roomId)
-  }
-
-  @SubscribeMessage('@Client:Leave_room')
-  leave(client: any, data: newmessage) {
-      client.leave(data.roomId)
-  }
-
   @SubscribeMessage('@Client:Sent_message')
-  onEvent(client: any, data: newmessage) {
-   this.server.to(data.roomId).emit('@server:Sent_message')
+ async onEvent(client: any, data: newmessage) {
+    const newmessage= await this.socketservise.createmessage(data)
+   this.server.emit('@server:Sent_message',newmessage)
   }
-
-
 }
