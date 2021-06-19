@@ -15,6 +15,9 @@ export class SocketServise {
         ){}
       async createmessage(data:newmessage){
          const message=await this.Messagemodal.create({...data,createdAt:new Date(Date.now())})
-         return message
+         const newmessage= await this.Messagemodal.findOne({_id:message._id})
+         .populate("senter",'_id name surename avatar')
+         .populate('secnt','_id name surename avatar')  
+         return newmessage
       }
 }
