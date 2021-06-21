@@ -35,12 +35,16 @@ export class Messageservise{
                         room:room
                      }
              }else{
-                    const newroom=await this.RoomModel.create({
+                    let newroom=await this.RoomModel.create({
                         romusers:[Fuser,Suser],
                         users:`${Fuser}${Suser}`,
                         createdAt:Date.now(),
                         updatedAt:Date.now()
                     })
+                    newroom=await this.RoomModel.findOne({_id:newroom._id})
+                    .populate('romusers','_id name surename avatar isActive')
+                    .populate("senter",'_id name surename avatar')
+                    .populate('secnt','_id name surename avatar')  
                     return {
                         messages:[],
                         room:newroom
