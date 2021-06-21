@@ -16,6 +16,10 @@ export interface newmessage{
   senter: string,
   secnt: string
 }
+export interface statuss{
+  id:string,
+  status:boolean
+}
 @WebSocketGateway()
 export class EventsGateway {
   constructor(private socketservise:SocketServise){}
@@ -34,5 +38,10 @@ export class EventsGateway {
     const newmessage= await this.socketservise.createmessage(data)
    this.server.to(data.romId).emit('@server:Sent_message',newmessage)
   }
+  @SubscribeMessage('@Client:user_status')
+  async changestatus(client: any, data:statuss ) {
+    const changeduser=await this.socketservise.changestatus(data)
+    this.server.emit('@server:user_status',changeduser)
+   }
   
 }
