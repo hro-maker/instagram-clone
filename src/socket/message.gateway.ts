@@ -30,9 +30,7 @@ export class EventsGateway {
     if(typeof data === 'string'){
       client.join(data)
     }
-       
   } 
-
   @SubscribeMessage('@Client:Sent_message')
  async onEvent(client: any, data: newmessage) {
     const newmessage= await this.socketservise.createmessage(data)

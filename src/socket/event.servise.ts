@@ -16,14 +16,14 @@ export class SocketServise {
         async createmessage(data:newmessage){
          const message=await this.Messagemodal.create({...data,createdAt:new Date(Date.now())})
          const newmessage= await this.Messagemodal.findOne({_id:message._id})
-         .populate("senter",'_id name surename avatar')
-         .populate('secnt','_id name surename avatar') 
+         .populate("senter",'_id name surename avatar lastvisite')
+         .populate('secnt','_id name surename avatar lastvisite') 
          const room=await this.RoomModel.findOneAndUpdate({_id:data.romId},{updatedAt:new Date(Date.now())})
-
          return newmessage
       }
       async changestatus(data:statuss){
-        const user=await this.userModel.findOneAndUpdate({_id:data.id},{isActive:data.status})
+        let user=await this.userModel.findOneAndUpdate({_id:data.id},{isActive:data.status,lastvisite:new Date(Date.now())})
+        user=await this.userModel.findOne({_id:data.id})
         return user
       }
 }

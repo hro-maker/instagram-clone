@@ -46,5 +46,7 @@ export class User {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
   otherSub: User[];
 
+  @Prop({ type:Date,default:Date.now()})
+  lastvisite: Date;
 }
 export const UserSchema = SchemaFactory.createForClass(User);
