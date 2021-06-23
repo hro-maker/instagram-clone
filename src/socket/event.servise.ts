@@ -15,11 +15,13 @@ export class SocketServise {
         ){}
         async createmessage(data:newmessage){
          const message=await this.Messagemodal.create({...data,createdAt:new Date(Date.now())})
-         const newmessage= await this.Messagemodal.findOne({_id:message._id})
+         const newmessage:any= await this.Messagemodal.findOne({_id:message._id})
          .populate("senter",'_id name surename avatar lastvisite')
          .populate('secnt','_id name surename avatar lastvisite') 
-         const room=await this.RoomModel.findOneAndUpdate({_id:data.romId},{updatedAt:new Date(Date.now())})
-         return newmessage
+         const room=await this.RoomModel.findOne({_id:data.romId}).populate('romusers','_id name surename avatar isActive')
+         room.updatedAt=new Date(Date.now())
+         room.save()
+         return {newmessage,newroom:{room,userid:newmessage.secnt._id}}
       }
       async changestatus(data:statuss){
         let user=await this.userModel.findOneAndUpdate({_id:data.id},{isActive:data.status,lastvisite:new Date(Date.now())})

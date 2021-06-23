@@ -33,8 +33,9 @@ export class EventsGateway {
   } 
   @SubscribeMessage('@Client:Sent_message')
  async onEvent(client: any, data: newmessage) {
-    const newmessage= await this.socketservise.createmessage(data)
+    const {newmessage,newroom}= await this.socketservise.createmessage(data)
    this.server.to(data.romId).emit('@server:Sent_message',newmessage)
+   this.server.emit('@server:new_room',newroom)
   }
   @SubscribeMessage('@Client:user_status')
   async changestatus(client: any, data:statuss ) {
