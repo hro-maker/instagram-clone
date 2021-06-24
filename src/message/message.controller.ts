@@ -15,6 +15,11 @@ export class MessageController {
     getrooms(@Req()req){
             return this.messageservise.getallchatrooms(req.userId)
     }
+    @Get('/getevents')
+    @UseGuards(AuthGuard)
+    getevents(@Req()req){
+            return this.messageservise.getallevents(req.userId)
+    }
     @Get('/removeall')
     remooveall(){
         return this.messageservise.remooveall()

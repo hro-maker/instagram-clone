@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { Events, EventsDocument } from "src/models/events";
 import { Message, MessageDocument } from "src/models/message";
 import { Room, RoomDocument } from "src/models/room";
 import { User, UserDocument } from "src/models/user";
@@ -18,6 +19,7 @@ export class Messageservise{
          @InjectModel(User.name) private userModel: Model<UserDocument>,
          @InjectModel(Message.name) private Messagemodal: Model<MessageDocument>,
          @InjectModel(Room.name) private RoomModel: Model<RoomDocument>,
+         @InjectModel(Events.name) private eventsmodel: Model<EventsDocument>,
          ){}
     async getmessage(Fuser,Suser):Promise<getmessages>{
        try {
@@ -66,5 +68,12 @@ export class Messageservise{
     async remooveall(){
             await this.Messagemodal.remove({})
             await this.RoomModel.remove({})
+    }
+    async getallevents(userId){
+        const events=await this.eventsmodel.find({object:userId})
+        .populate('post','_id imageUrl')
+        .populate('subject','name avatar')
+        console.log("myevents",events)
+        return events
     }
 }

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Events, EventsSchema } from 'src/models/events';
 import { Message, MessageSchema } from 'src/models/message';
 import { Room, RoomSchema } from 'src/models/room';
 import { User, UserSchema } from 'src/models/user';
@@ -16,6 +17,9 @@ import { Messageservise } from './message.service';
     ]),
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema }
+    ]),
+    MongooseModule.forFeature([
+      { name: Events.name, schema: EventsSchema }
     ])
   ],
   controllers: [MessageController],
