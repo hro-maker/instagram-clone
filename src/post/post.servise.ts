@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { updatepostdto } from 'src/dtos/postdto';
 import { FileServise, FileType } from 'src/file/file.servise';
+import { Events, EventsDocument } from 'src/models/events';
 import { Post, PostDocument } from 'src/models/post';
 import { User, UserDocument } from 'src/models/user';
 interface createdto {
@@ -14,6 +15,7 @@ export class postservise {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Events.name) private eventsmodel: Model<EventsDocument>,
     private fileservise: FileServise,
   ) {}
   async create(dto: createdto, files: any) {
@@ -88,6 +90,7 @@ export class postservise {
         const post=await this.postModel.findOne({_id:postId})
       this.fileservise.removeFile(post.imageUrl)
       await this.postModel.findOneAndDelete({_id:postId})
+      await this.eventsmodel.deleteMany({post:postId})
       return true
       } catch (error) {
           return false

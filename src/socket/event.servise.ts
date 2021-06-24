@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Events, EventsDocument } from 'src/models/events';
 import { Message, MessageDocument } from 'src/models/message';
 import { Room, RoomDocument } from 'src/models/room';
 import { User, UserDocument } from 'src/models/user';
-import { newmessage, statuss } from './message.gateway';
+import { eventlike, newmessage, statuss } from './message.gateway';
 
 @Injectable()
 export class SocketServise {
@@ -12,6 +13,7 @@ export class SocketServise {
         @InjectModel(User.name) private userModel: Model<UserDocument>,
         @InjectModel(Message.name) private Messagemodal: Model<MessageDocument>,
         @InjectModel(Room.name) private RoomModel: Model<RoomDocument>,
+        @InjectModel(Events.name) private eventsmodel: Model<EventsDocument>,
         ){}
         async createmessage(data:newmessage){
          const message=await this.Messagemodal.create({...data,createdAt:new Date(Date.now())})
@@ -27,5 +29,32 @@ export class SocketServise {
         let user=await this.userModel.findOneAndUpdate({_id:data.id},{isActive:data.status,lastvisite:new Date(Date.now())})
         user=await this.userModel.findOne({_id:data.id})
         return user
+      }
+      async eventslike(data:any,type){
+        const canditate=await this.eventsmodel.findOne({subject:data.subject,object:data.object,type})
+        .populate('post','_id imageUrl')
+        .populate('subject','name avatar')
+        if(canditate){
+          canditate.createdAt=new Date(Date.now())
+          await canditate.save()
+          return canditate
+        }else{
+          const newevent:any={
+            subject:data.subject,
+            object:data.object,
+            type
+          }
+          if(data.post){
+            newevent.post=data.post
+          }
+          if(data.comment){
+            newevent.comment=data.comment
+          }
+          let event=await  this.eventsmodel.create(newevent)
+          event=await this.eventsmodel.findOne({subject:data.subject,object:data.object,type})
+          .populate('post','_id imageUrl')
+          .populate('subject','name avatar')
+          return event
+        }  
       }
 }

@@ -10,8 +10,14 @@ export class Events{
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Post',required:false })
     post:Post
     
-    @Prop({ type: String, ref: 'Post',enum:['like','follow'] })
+    @Prop({ type: String,enum:['like','follow','comment'] })
     type:String
+
+    @Prop({ type: String,required:false,default:"" })
+    comment:String
+
+    @Prop({ type: Boolean, default:false })
+    readed:Boolean
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     subject:User

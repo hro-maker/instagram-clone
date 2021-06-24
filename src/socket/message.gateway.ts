@@ -20,6 +20,12 @@ export interface statuss{
   id:string,
   status:boolean
 }
+export interface eventlike{
+  subject:string,
+  object:string,
+  post:string,
+  comment?:string
+}
 @WebSocketGateway()
 export class EventsGateway {
   constructor(private socketservise:SocketServise){}
@@ -37,10 +43,25 @@ export class EventsGateway {
    this.server.to(data.romId).emit('@server:Sent_message',newmessage)
    this.server.emit('@server:new_room',newroom)
   }
+  
   @SubscribeMessage('@Client:user_status')
   async changestatus(client: any, data:statuss ) {
     const changeduser=await this.socketservise.changestatus(data)
     this.server.emit('@server:user_status',changeduser)
    }
-  
+   @SubscribeMessage('@Client:events_like')
+  async eventlike(client: any, data:eventlike ) {
+    const event=await this.socketservise.eventslike(data,'like')
+     this.server.emit('@server:newevent',event)
+   }
+   @SubscribeMessage('@Client:event_follow')
+   async eventfollow(client: any, data:eventlike ) {
+     const event=await this.socketservise.eventslike(data,'follow')
+     this.server.emit('@server:newevent',event)
+    }
+    @SubscribeMessage('@Client:event_comment')
+   async eventcomment(client: any, data:eventlike ) {
+     const event=await this.socketservise.eventslike(data,'comment')
+     this.server.emit('@server:newevent',event)
+    }
 }

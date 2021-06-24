@@ -5,6 +5,7 @@ import { Room, RoomSchema } from 'src/models/room';
 import { User, UserSchema } from 'src/models/user';
 import { EventsGateway } from './message.gateway';
 import { SocketServise } from './event.servise';
+import { Events, EventsSchema } from 'src/models/events';
 
 @Module({
   imports: [
@@ -16,6 +17,9 @@ import { SocketServise } from './event.servise';
     ]),
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema }
+    ]),
+    MongooseModule.forFeature([
+      { name: Events.name, schema: EventsSchema }
     ])
   ],
   providers: [EventsGateway,SocketServise],
