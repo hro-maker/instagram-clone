@@ -24,7 +24,8 @@ export interface eventlike{
   subject:string,
   object:string,
   post:string,
-  comment?:string
+  comment?:string,
+  comentId?:string
 }
 @WebSocketGateway()
 export class EventsGateway {

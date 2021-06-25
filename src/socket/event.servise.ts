@@ -31,14 +31,6 @@ export class SocketServise {
         return user
       }
       async eventslike(data:any,type){
-        const canditate=await this.eventsmodel.findOne({subject:data.subject,object:data.object,type})
-        .populate('post','_id imageUrl')
-        .populate('subject','name avatar')
-        if(canditate){
-          canditate.createdAt=new Date(Date.now())
-          await canditate.save()
-          return canditate
-        }else{
           const newevent:any={
             subject:data.subject,
             object:data.object,
@@ -49,12 +41,13 @@ export class SocketServise {
           }
           if(data.comment){
             newevent.comment=data.comment
+            newevent.comentId=data.comentId
           }
           let event=await  this.eventsmodel.create(newevent)
-          event=await this.eventsmodel.findOne({subject:data.subject,object:data.object,type})
+          event=await this.eventsmodel.findOne({_id:event._id})
           .populate('post','_id imageUrl')
           .populate('subject','name avatar')
           return event
-        }  
+      
       }
 }

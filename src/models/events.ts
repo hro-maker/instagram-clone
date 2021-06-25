@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Post } from "./post";
 import * as mongoose from 'mongoose';
 import { User } from "./user";
+import { Coment } from "./comentschema";
 export type  EventsDocument= Events & Document;
 
 @Schema()
@@ -13,6 +14,9 @@ export class Events{
     @Prop({ type: String,enum:['like','follow','comment'] })
     type:String
 
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Coment',required:false })
+    comentId:Coment
+    
     @Prop({ type: String,required:false,default:"" })
     comment:String
 

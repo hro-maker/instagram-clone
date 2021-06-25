@@ -39,16 +39,12 @@ export class Commentservise{
             if(coment.userId != userId){
                 throw new BadRequestException("action dont alloed")
             }
-            const text=coment.text
             const post =await this.postModel.findOne({_id:postId})
             post.coments=post.coments.filter((el)=>String(el) != String(coment._id))
             await post.save()
             await this.comentmodel.findOneAndDelete({_id:coment._id})
             await this.eventsmodel.findOneAndDelete({
-                subject:userId,
-                object:post.user,
-                post:post._id,
-                comment:text
+                comentId
             }).catch((err)=>{
                 console.log(err)
             })
