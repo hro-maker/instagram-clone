@@ -76,4 +76,12 @@ export class Messageservise{
         console.log("myevents",events)
         return events
     }
+    async readallevents(userId){
+       await this.eventsmodel.updateMany({object:userId,readed:false},{readed:true}).then(()=>{
+            return true
+        }).catch((err)=>{
+            console.log(err)
+            return false
+        })
+    }
 }
