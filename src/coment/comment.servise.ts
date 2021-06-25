@@ -2,6 +2,7 @@ import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nes
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Coment, ComentDocument } from "src/models/comentschema";
+import { Events, EventsDocument } from "src/models/events";
 import { Post, PostDocument } from "src/models/post";
 import { User, UserDocument } from "src/models/user";
 import { createcomentdto } from './../dtos/commentdtos';
@@ -13,6 +14,7 @@ export class Commentservise{
         @InjectModel(Post.name) private postModel: Model<PostDocument>,
         @InjectModel(User.name) private userModel: Model<UserDocument>,
         @InjectModel(Coment.name) private comentmodel: Model<ComentDocument>,
+        @InjectModel(Events.name) private eventsmodel: Model<EventsDocument>,
       ) {}
     async createcomment(dto:createcomentdto,userId:any){
        try {
@@ -37,10 +39,19 @@ export class Commentservise{
             if(coment.userId != userId){
                 throw new BadRequestException("action dont alloed")
             }
+            const text=coment.text
             const post =await this.postModel.findOne({_id:postId})
             post.coments=post.coments.filter((el)=>String(el) != String(coment._id))
             await post.save()
             await this.comentmodel.findOneAndDelete({_id:coment._id})
+            await this.eventsmodel.findOneAndDelete({
+                subject:userId,
+                object:post.user,
+                post:post._id,
+                comment:text
+            }).catch((err)=>{
+                console.log(err)
+            })
             return {message:"coment deleted"}
            } catch (error) {
             throw new BadRequestException(error.message)
