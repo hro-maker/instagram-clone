@@ -18,6 +18,7 @@ import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 import { Post, PostDocument } from 'src/models/post';
 import * as nodemailer from 'nodemailer';
+import { Events, EventsDocument } from 'src/models/events';
 dotenv.config();
 let transporter;
 try {
@@ -42,6 +43,7 @@ export class Authprovider {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Events.name) private eventsmodel: Model<EventsDocument>,
     private fileservise: FileServise,
   ) {}
   async register(
@@ -198,6 +200,7 @@ export class Authprovider {
       other.otherSub = other.otherSub.filter(
         (el) => String(el) != String(me._id),
       );
+      await this.eventsmodel.findOneAndDelete({subject:me._id,object:other._id,type:"follow"})
       await me.save();
       await other.save();
     } catch (error) {

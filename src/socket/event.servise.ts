@@ -46,7 +46,7 @@ export class SocketServise {
           let event=await  this.eventsmodel.create(newevent)
           event=await this.eventsmodel.findOne({_id:event._id})
           .populate('post','_id imageUrl')
-          .populate('subject','name avatar')
+          .populate('subject','_id name avatar')
           return event
       
       }

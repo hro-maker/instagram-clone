@@ -23,10 +23,9 @@ export class Messageservise{
          ){}
     async getmessage(Fuser,Suser):Promise<getmessages>{
        try {
-        const rooms= await this.RoomModel.find().populate('romusers','_id name surename avatar isActive')
-        const firstregex = new RegExp(String(Fuser), 'g');
-        const secntregex = new RegExp(String(Suser), 'g');
-         const room=rooms.filter(el=>firstregex.test(el.users) && secntregex.test(el.users))[0]
+           const ids=[String(Fuser)+String(Suser),String(Suser)+String(Fuser)]
+        const room= await this.RoomModel.findOne({ 'users': { $in: ids } })
+        .populate('romusers','_id name surename avatar isActive lastvisite')
              if(room){
               const  messages=await this.Messagemodal
               .find({romId:room._id})
@@ -70,10 +69,10 @@ export class Messageservise{
             await this.RoomModel.remove({})
     }
     async getallevents(userId){
-        const events=await this.eventsmodel.find({object:userId})
+        let events:any=await this.eventsmodel.find({object:userId})
         .populate('post','_id imageUrl')
-        .populate('subject','name avatar')
-        console.log("myevents",events)
+        .populate('subject','_id name avatar')
+        events=events.filter(el=>String(el.subject._id) !== String(userId))
         return events
     }
     async readallevents(userId){
