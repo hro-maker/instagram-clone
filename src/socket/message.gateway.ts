@@ -1,3 +1,5 @@
+import { UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
   ConnectedSocket,
   MessageBody,
@@ -35,14 +37,24 @@ export class EventsGateway {
   @SubscribeMessage('@Client:Join_room')
   joinroom(@ConnectedSocket() client: Socket,@MessageBody() data: string){
     if(typeof data === 'string'){
-      client.join(data)
+          client.join(data)
     }
   } 
   @SubscribeMessage('@Client:Sent_message')
  async onEvent(client: any, data: newmessage) {
     const {newmessage,newroom}= await this.socketservise.createmessage(data)
    this.server.to(data.romId).emit('@server:Sent_message',newmessage)
-   this.server.emit('@server:new_room',newroom)
+      this.server.emit('@server:new_room',newroom)
+  }
+  @SubscribeMessage('@Client:Sent_message_image')
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'foto', maxCount: 10 }
+  ]))
+ async sentimage(client: any, data: newmessage,@UploadedFiles() files) {
+   console.log(files,Date.now())
+  //   const {newmessage,newroom}= await this.socketservise.createmessage(data)
+  //  this.server.to(data.romId).emit('@server:Sent_message',newmessage)
+  //  this.server.emit('@server:new_room',newroom)
   }
   
   @SubscribeMessage('@Client:user_status')

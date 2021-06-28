@@ -17,8 +17,14 @@ export class Message{
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
     likes: User[];
+
     @Prop({ type: String,enum:['message','audio','image'],default:"message" })
     type:String
+    
+    
+    @Prop({ type: [String],default:[] })
+    images:String[]
+    
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     senter:User
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })

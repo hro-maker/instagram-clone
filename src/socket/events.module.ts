@@ -6,9 +6,11 @@ import { User, UserSchema } from 'src/models/user';
 import { EventsGateway } from './message.gateway';
 import { SocketServise } from './event.servise';
 import { Events, EventsSchema } from 'src/models/events';
+import { filemodule } from 'src/file/file.module';
 
 @Module({
   imports: [
+    filemodule,
     MongooseModule.forFeature([
       { name: Message.name, schema: MessageSchema }
     ]),

@@ -2,12 +2,14 @@ import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import * as path from 'path'
 import * as fs from 'fs'
 import * as uuid from 'uuid'
-
+import * as dotenv from 'dotenv'
+import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
+import toStream = require('buffer-to-stream');
+dotenv.config()
 export enum FileType {
     VIDEO = 'video',
     IMAGE = 'image'
 }
-
 @Injectable()
 export class FileServise{
 
@@ -36,4 +38,15 @@ export class FileServise{
           }
     }
 
+    async uploadImage(
+        file: Express.Multer.File,
+      ): Promise<UploadApiResponse | UploadApiErrorResponse> {
+        return new Promise((resolve, reject) => {
+          const upload = v2.uploader.upload_stream((error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          });
+          toStream(file.buffer).pipe(upload);
+        });
+      }
 }

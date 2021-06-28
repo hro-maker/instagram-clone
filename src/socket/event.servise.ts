@@ -6,10 +6,12 @@ import { Message, MessageDocument } from 'src/models/message';
 import { Room, RoomDocument } from 'src/models/room';
 import { User, UserDocument } from 'src/models/user';
 import { eventlike, newmessage, statuss } from './message.gateway';
+import { FileServise } from 'src/file/file.servise';
 
 @Injectable()
 export class SocketServise {
     constructor( 
+      private fileservise:FileServise,
         @InjectModel(User.name) private userModel: Model<UserDocument>,
         @InjectModel(Message.name) private Messagemodal: Model<MessageDocument>,
         @InjectModel(Room.name) private RoomModel: Model<RoomDocument>,
