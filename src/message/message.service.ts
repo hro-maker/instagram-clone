@@ -5,6 +5,7 @@ import { Events, EventsDocument } from "src/models/events";
 import { Message, MessageDocument } from "src/models/message";
 import { Room, RoomDocument } from "src/models/room";
 import { User, UserDocument } from "src/models/user";
+import { FileServise } from 'src/file/file.servise';
 
 export interface getmessages{
     messages:MessageDocument[],
@@ -20,6 +21,7 @@ export class Messageservise{
          @InjectModel(Message.name) private Messagemodal: Model<MessageDocument>,
          @InjectModel(Room.name) private RoomModel: Model<RoomDocument>,
          @InjectModel(Events.name) private eventsmodel: Model<EventsDocument>,
+         private fileservise:FileServise
          ){}
     async getmessage(Fuser,Suser):Promise<getmessages>{
        try {
@@ -82,5 +84,18 @@ export class Messageservise{
             console.log(err)
             return false
         })
+    }
+    async createimages(files:any[]){
+     try {
+        const images=[]
+        for (let i = 0; i < files.length; i++) {
+            const file=await this.fileservise.uploadImage(files[i]) 
+            images.push(file.secure_url)
+        }
+        return images
+     } catch (error) {
+            console.log(error)
+     }
+        // secure_url
     }
 }

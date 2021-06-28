@@ -7,8 +7,10 @@ import { User, UserSchema } from 'src/models/user';
 import { MessageController } from './message.controller';
 import { Messageservise } from './message.service';
 
+import { FileServise } from 'src/file/file.servise';
 @Module({
   imports: [
+  
     MongooseModule.forFeature([
       { name: Message.name, schema: MessageSchema }
     ]),
@@ -23,6 +25,6 @@ import { Messageservise } from './message.service';
     ])
   ],
   controllers: [MessageController],
-  providers:[Messageservise]
+  providers:[Messageservise,FileServise]
 })
 export class MessageModule {}
