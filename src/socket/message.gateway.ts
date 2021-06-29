@@ -46,12 +46,18 @@ export class EventsGateway {
    this.server.to(data.romId).emit('@server:Sent_message',newmessage)
       this.server.emit('@server:new_room',newroom)
   }
-  @SubscribeMessage('@Client:Sent_message_image')
- async sentimage(client: any, data: newmessage) {
-  //   const {newmessage,newroom}= await this.socketservise.createmessage(data)
-  //  this.server.to(data.romId).emit('@server:Sent_message',newmessage)
-  //  this.server.emit('@server:new_room',newroom)
-  }
+  @SubscribeMessage('@Client:Sent_message_images')
+  async sentimage(client: any, data: newmessage) {
+      const {newmessage,newroom}= await this.socketservise.createmessage(data,"image")
+     this.server.to(data.romId).emit('@server:Sent_message',newmessage)
+     this.server.emit('@server:new_room',newroom)
+   }
+   @SubscribeMessage('@Client:Sent_message_voice')
+   async setvoice(client: any, data: newmessage) {
+       const {newmessage,newroom}= await this.socketservise.createmessage(data,"audio")
+      this.server.to(data.romId).emit('@server:Sent_message',newmessage)
+      this.server.emit('@server:new_room',newroom)
+    }
   
   @SubscribeMessage('@Client:user_status')
   async changestatus(client: any, data:statuss ) {

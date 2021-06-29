@@ -17,8 +17,8 @@ export class SocketServise {
         @InjectModel(Room.name) private RoomModel: Model<RoomDocument>,
         @InjectModel(Events.name) private eventsmodel: Model<EventsDocument>,
         ){}
-        async createmessage(data:newmessage){
-         const message=await this.Messagemodal.create({...data,createdAt:new Date(Date.now())})
+        async createmessage(data:newmessage,type='message'){
+         const message=await this.Messagemodal.create({...data,type,createdAt:new Date(Date.now())})
          const newmessage:any= await this.Messagemodal.findOne({_id:message._id})
          .populate("senter",'_id name surename avatar lastvisite')
          .populate('secnt','_id name surename avatar lastvisite') 
