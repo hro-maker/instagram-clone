@@ -61,8 +61,20 @@ export class Messageservise{
         const reg = new RegExp(String(myid), 'g');
      const rooms=await this.RoomModel.find({users: {$regex: reg}})
      .populate('romusers','_id name surename avatar isActive')
-            console.log(rooms)
+     .populate('last','type text senter')
+                for (let i = 0; i < rooms.length; i++) {
+                        const unreadmessages=await this.Messagemodal.find({romId:rooms[i]._id,secnt:myid,readed:false})
+                        rooms[i].count=unreadmessages.length
+                }
         return {rooms}
+    }
+    async getroombyid(roomid,myid){
+        const room:any=await this.RoomModel.findOne({_id:roomid})
+        .populate('romusers','_id name surename avatar isActive')
+        .populate('last','type text senter')
+        const unreadmessages=await this.Messagemodal.find({romId:room._id,readed:false,secnt:myid})
+        room.count=unreadmessages.length
+        return room
     }
     async remooveall(){
             await this.Messagemodal.remove({})
@@ -96,8 +108,18 @@ export class Messageservise{
      }
         // secure_url
     }
-    async myunreadedcounts(myid:string){
+    async myunreadedcounts(myid){
             const myunreades=await this.Messagemodal.find({readed:false,secnt:myid})
             return myunreades.length
     }   
+    async readmessagesbyroomid(romId){
+        await this.Messagemodal.updateMany({romId,readed:false},{readed:true}).then(()=>{
+            return true
+        }).catch((err)=>{
+            console.log(err)
+            return false
+        })
+    }
+
+
 }

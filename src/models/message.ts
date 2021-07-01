@@ -29,6 +29,7 @@ export class Message{
     senter:User
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     secnt:User
+    
     @Prop({ type:Boolean,default:false})
     readed: Boolean;
     @Prop({ type:Date,default:Date.now()})

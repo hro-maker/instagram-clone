@@ -43,4 +43,14 @@ export class MessageController {
   unreadcount(@Req() req) {
     return this.messageservise.myunreadedcounts(req.userId);
   }
+  @Get('/readmessages/:roomid')
+  @UseGuards(AuthGuard)
+  readmessages(@Param() param) {
+    return this.messageservise.readmessagesbyroomid(param.roomid);
+  }
+  @Get('/getroombyid/:roomid')
+  @UseGuards(AuthGuard)
+  getroombyid(@Param() param,@Req() req) {
+    return this.messageservise.getroombyid(param.roomid,req.userId);
+  }
 }

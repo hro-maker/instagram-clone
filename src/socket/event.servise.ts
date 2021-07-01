@@ -24,6 +24,7 @@ export class SocketServise {
          .populate('secnt','_id name surename avatar lastvisite') 
          const room=await this.RoomModel.findOne({_id:data.romId}).populate('romusers','_id name surename avatar isActive')
          room.updatedAt=new Date(Date.now())
+         room.last=newmessage._id
          room.save()
          return {newmessage,newroom:{room,userid:newmessage.secnt._id}}
       }
