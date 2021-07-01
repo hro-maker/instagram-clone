@@ -38,4 +38,9 @@ export class MessageController {
   createpost(@Body()dto:any,@Req() req:any,@UploadedFiles() files){
           return this.messageservise.createimages(files.foto)
   }
+  @Get('/unreadcount')
+  @UseGuards(AuthGuard)
+  unreadcount(@Req() req) {
+    return this.messageservise.myunreadedcounts(req.userId);
+  }
 }

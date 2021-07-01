@@ -58,8 +58,6 @@ export class Messageservise{
        }
     }   
     async getallchatrooms(myid):Promise<getrooms>{
-       
-        // .populate('likes','_id name surename avatar')
         const reg = new RegExp(String(myid), 'g');
      const rooms=await this.RoomModel.find({users: {$regex: reg}})
      .populate('romusers','_id name surename avatar isActive')
@@ -98,4 +96,8 @@ export class Messageservise{
      }
         // secure_url
     }
+    async myunreadedcounts(myid:string){
+            const myunreades=await this.Messagemodal.find({readed:false,secnt:myid})
+            return myunreades.length
+    }   
 }
