@@ -120,6 +120,11 @@ export class Messageservise{
             return false
         })
     }
+    async getroombyuserid(userid,myid){
+        const ids=[String(userid)+String(myid),String(myid)+String(userid)]
+        const room= await this.RoomModel.findOne({ 'users': { $in: ids } })
+        return room
+    }
 
 
 }

@@ -53,4 +53,9 @@ export class MessageController {
   getroombyid(@Param() param,@Req() req) {
     return this.messageservise.getroombyid(param.roomid,req.userId);
   }
+  @Get('/getroombyuserid/:userid')
+  @UseGuards(AuthGuard)
+  getroombuserid(@Param() param,@Req() req) {
+    return this.messageservise.getroombyuserid(param.userid,req.userId);
+  }
 }
