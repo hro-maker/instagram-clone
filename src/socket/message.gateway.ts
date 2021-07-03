@@ -37,9 +37,18 @@ export class EventsGateway {
   @SubscribeMessage('@Client:Join_room')
   joinroom(@ConnectedSocket() client: Socket,@MessageBody() data: string){
     if(typeof data === 'string'){
+        console.log('join',data)
           client.join(data)
     }
   } 
+  @SubscribeMessage('@Client:leave_room')
+  leaveroom(@ConnectedSocket() client: Socket,@MessageBody() data: string){
+    if(typeof data === 'string'){
+      console.log('leave',data)
+          client.leave(data)
+    }
+  } 
+  
   @SubscribeMessage('@Client:Sent_message')
  async onEvent(client: any, data: newmessage) {
     const {newmessage,newroom}= await this.socketservise.createmessage(data)
@@ -79,4 +88,11 @@ export class EventsGateway {
      const event=await this.socketservise.eventslike(data,'comment')
      this.server.emit('@server:newevent',event)
     }
+    @SubscribeMessage('changetype')
+    async changeevent(client: any, data:any ) {
+      const {id,message,room}=data
+      this.server.to(room).emit('@server:changetype',{id,message,room})
+     }
+
+    // changetype
 }

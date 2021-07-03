@@ -77,12 +77,12 @@ export class Authprovider {
         }
       }
       dto.password = await bcrypt.hash(dto.password, 12);
-      let avatar = '';
+      let avatar:any = '';
       if (files) {
-        avatar = this.fileservise.createFile(FileType.IMAGE, files[0]);
+        avatar =await this.fileservise.uploadImage(files[0]);
       }
       let code = String(randomnumbers());
-      const user = { ...dto, avatar, confirm: code };
+      const user = { ...dto, avatar:avatar ? avatar.secure_url : avatar, confirm: code };
       try {
         transporter.sendMail({
           to: user.email,
@@ -146,11 +146,10 @@ export class Authprovider {
         if (user.avatar.length > 1) {
           this.fileservise.removeFile(user.avatar);
         }
-        let newavatar = this.fileservise.createFile(
-          FileType.IMAGE,
+        let newavatar =await this.fileservise.uploadImage(
           file.foto[0],
         );
-        dto.avatar = newavatar;
+        dto.avatar = newavatar.secure_url;
       }
       const olduser = JSON.parse(JSON.stringify({ ...user }))._doc;
       const newuserr = { ...olduser, ...dto };

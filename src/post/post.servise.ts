@@ -23,14 +23,11 @@ export class postservise {
       if (typeof files.foto === 'undefined') {
         throw new HttpException('image is required', HttpStatus.BAD_REQUEST);
       }
-      const imageUrl = this.fileservise.createFile(
-        FileType.IMAGE,
-        files.foto[0],
-      );
+      const imageUrl =await  this.fileservise.uploadImage(files.foto[0])
       const user = await this.userModel.findOne({ _id: dto.userId });
       const post = await this.postModel.create({
         user: dto.userId,
-        imageUrl,
+        imageUrl:imageUrl.secure_url,
         description: dto.description,
         createdAt: new Date(Date.now()),
       });
