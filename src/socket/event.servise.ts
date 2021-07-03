@@ -21,7 +21,8 @@ export class SocketServise {
          const message=await this.Messagemodal.create({...data,type,createdAt:new Date(Date.now())})
          const newmessage:any= await this.Messagemodal.findOne({_id:message._id})
          .populate("senter",'_id name surename avatar lastvisite')
-         .populate('secnt','_id name surename avatar lastvisite') 
+         .populate('secnt','_id name surename avatar lastvisite')
+         .populate('post') 
          const room=await this.RoomModel.findOne({_id:data.romId}).populate('romusers','_id name surename avatar isActive')
          room.updatedAt=new Date(Date.now())
          room.last=newmessage._id

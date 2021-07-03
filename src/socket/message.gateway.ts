@@ -16,7 +16,8 @@ export interface newmessage{
   text: string,
   romId: string,
   senter: string,
-  secnt: string
+  secnt: string,
+  post:any
 }
 export interface statuss{
   id:string,
@@ -67,7 +68,13 @@ export class EventsGateway {
       this.server.to(data.romId).emit('@server:Sent_message',newmessage)
       this.server.emit('@server:new_room',{newmessage,newroom})
     }
-  
+    @SubscribeMessage('@Client:Sent_message_post')
+    async sentpost(client: any, data: newmessage) {
+        const {newmessage,newroom}= await this.socketservise.createmessage(data,"post")
+       this.server.to(data.romId).emit('@server:Sent_message',newmessage)
+       this.server.emit('@server:new_room',{newmessage,newroom})
+     }
+    // post
   @SubscribeMessage('@Client:user_status')
   async changestatus(client: any, data:statuss ) {
     const changeduser=await this.socketservise.changestatus(data)

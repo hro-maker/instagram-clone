@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { User } from "./user";
 import { Room } from "./room";
+import { Post } from "./post";
 
 export type  MessageDocument= Message & Document;
 
@@ -18,10 +19,12 @@ export class Message{
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],default:[] })
     likes: User[];
 
-    @Prop({ type: String,enum:['message','audio','image'],default:"message" })
+    @Prop({ type: String,enum:['message','audio','image','post'],default:"message" })
     type:String
-    
-    
+   
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Post',required:false,default:"" })
+    post:Post
+
     @Prop({ type: [String],default:[] })
     images:String[]
     
