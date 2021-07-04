@@ -33,7 +33,12 @@ export class Messageservise{
               .find({romId:room._id})
               .populate("senter",'_id name surename avatar')
               .populate('secnt','_id name surename avatar')
-              .populate('post')   
+              .populate({
+                path : 'post',
+                populate : {
+                  path : 'user'
+                }
+              })   
                      return {
                         messages,
                         room:room

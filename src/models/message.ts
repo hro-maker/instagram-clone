@@ -22,7 +22,7 @@ export class Message{
     @Prop({ type: String,enum:['message','audio','image','post'],default:"message" })
     type:String
    
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Post',required:false,default:"" })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Post',required:false })
     post:Post
 
     @Prop({ type: [String],default:[] })
