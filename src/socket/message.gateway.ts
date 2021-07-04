@@ -35,6 +35,7 @@ export class EventsGateway {
   constructor(private socketservise:SocketServise){}
   @WebSocketServer()
   server: Server;
+  //room
   @SubscribeMessage('@Client:Join_room')
   joinroom(@ConnectedSocket() client: Socket,@MessageBody() data: string){
     if(typeof data === 'string'){
@@ -49,7 +50,7 @@ export class EventsGateway {
           client.leave(data)
     }
   } 
-  
+  //message
   @SubscribeMessage('@Client:Sent_message')
  async onEvent(client: any, data: newmessage) {
     const {newmessage,newroom}= await this.socketservise.createmessage(data)
@@ -74,12 +75,13 @@ export class EventsGateway {
        this.server.to(data.romId).emit('@server:Sent_message',newmessage)
        this.server.emit('@server:new_room',{newmessage,newroom})
      }
-    // post
+    // user status
   @SubscribeMessage('@Client:user_status')
   async changestatus(client: any, data:statuss ) {
     const changeduser=await this.socketservise.changestatus(data)
     this.server.emit('@server:user_status',changeduser)
    }
+   //event
    @SubscribeMessage('@Client:events_like')
   async eventlike(client: any, data:eventlike ) {
     const event=await this.socketservise.eventslike(data,'like')
@@ -100,6 +102,13 @@ export class EventsGateway {
       const {id,message,room}=data
       this.server.to(room).emit('@server:changetype',{id,message,room})
      }
-
-    // changetype
+     @SubscribeMessage('Client:calling_to_user')
+    async callingtouser(client: any, data:any ) {
+      const {caller,targetid}=data
+      this.server.emit('@server:calling_to_user',{caller,targetid})
+     }
+     @SubscribeMessage('@client:calling_answer')
+     async callinganswer(client: any, data:any ) {
+       this.server.emit('@server:calling_answer',data)
+      }
 }

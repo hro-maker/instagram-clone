@@ -35,6 +35,7 @@ export class Message{
     
     @Prop({ type:Boolean,default:false})
     readed: Boolean;
+  
     @Prop({ type:Date,default:Date.now()})
     createdAt: Date;    
 }
