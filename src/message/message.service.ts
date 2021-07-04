@@ -32,7 +32,8 @@ export class Messageservise{
               const  messages=await this.Messagemodal
               .find({romId:room._id})
               .populate("senter",'_id name surename avatar')
-              .populate('secnt','_id name surename avatar')   
+              .populate('secnt','_id name surename avatar')
+              .populate('post')   
                      return {
                         messages,
                         room:room
