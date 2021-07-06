@@ -30,24 +30,44 @@ export interface eventlike{
   comment?:string,
   comentId?:string
 }
+let usersinside={}
 @WebSocketGateway()
 export class EventsGateway {
   constructor(private socketservise:SocketServise){}
   @WebSocketServer()
   server: Server;
   //room
+
+    usersinside={}
   @SubscribeMessage('@Client:Join_room')
-  joinroom(@ConnectedSocket() client: Socket,@MessageBody() data: string){
-    if(typeof data === 'string'){
+  joinroom(@ConnectedSocket() client: Socket,@MessageBody() data: any){
+    if(data){
+      if(typeof data === 'string'){
         console.log('join',data)
           client.join(data)
+    }else{
+      client.join(data.roomId)
+      console.log('onjoin',data)
+      this.usersinside[data.roomId]=this.usersinside[data] ? [...this.usersinside[data],data.user] : [data.user]
+      this.server.to(data.roomId).emit('@Server:users_inside',this.usersinside)
+    }
     }
   } 
+
+
   @SubscribeMessage('@Client:leave_room')
-  leaveroom(@ConnectedSocket() client: Socket,@MessageBody() data: string){
-    if(typeof data === 'string'){
-      console.log('leave',data)
-          client.leave(data)
+  leaveroom(@ConnectedSocket() client: Socket,@MessageBody() data: any){
+    if(data){
+      if(typeof data === 'string'){
+        client.leave(data)
+        console.log("leave",data)
+  }else{
+      client.leave(data.roomId)
+      console.log('onleave',data)
+      this.usersinside[data.roomId]=this.usersinside[data]?.filter(el=>String(el._id) === String(data.user._id))
+      this.server.to(data.roomId).emit('@Server:user_leave_room',this.usersinside)
+      console.log('leave',this.usersinside)
+  }
     }
   } 
   //message
