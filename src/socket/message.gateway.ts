@@ -47,9 +47,9 @@ export class EventsGateway {
           client.join(data)
     }else{
       client.join(data.roomId)
-      console.log('onjoin',data)
-      this.usersinside[data.roomId]=this.usersinside[data] ? [...this.usersinside[data],data.user] : [data.user]
-      this.server.to(data.roomId).emit('@Server:users_inside',this.usersinside)
+      // console.log('onjoin',data)
+      // this.usersinside[data.roomId]=this.usersinside[data] ? [...this.usersinside[data],data.user] : [data.user]
+      // this.server.to(data.roomId).emit('@Server:users_inside',this.usersinside)
     }
     }
   } 
@@ -64,9 +64,9 @@ export class EventsGateway {
   }else{
       client.leave(data.roomId)
       console.log('onleave',data)
-      this.usersinside[data.roomId]=this.usersinside[data]?.filter(el=>String(el._id) === String(data.user._id))
-      this.server.to(data.roomId).emit('@Server:user_leave_room',this.usersinside)
-      console.log('leave',this.usersinside)
+      // this.usersinside[data.roomId]=this.usersinside[data]?.filter(el=>String(el._id) === String(data.user._id))
+      // this.server.to(data.roomId).emit('@Server:user_leave_room',this.usersinside)
+      // console.log('leave',this.usersinside)
   }
     }
   } 
@@ -131,4 +131,13 @@ export class EventsGateway {
      async callinganswer(client: any, data:any ) {
        this.server.emit('@server:calling_answer',data)
       }
+      @SubscribeMessage('@client:peer_call_to_user')
+       async peercalling(client: any, data:any ) {
+       this.server.to(data.room).emit('@server:peer_call_to_user',data)
+      }
+      @SubscribeMessage('@client:peer_answer_call_to_user')
+      async peeranswer(client: any, data:any ) {
+        this.server.to(data.room).emit('@server:peer_answer_call_to_user',data)
+       }
+     
 }
