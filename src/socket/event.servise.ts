@@ -28,7 +28,16 @@ export class SocketServise {
             path : 'user'
           }
         }) 
-         const room=await this.RoomModel.findOne({_id:data.romId}).populate('romusers','_id name surename avatar isActive')
+         let room=await this.RoomModel.findOne({_id:data.romId}).populate('romusers','_id name surename avatar isActive')
+         if(!room){
+           room=await this.RoomModel.create({
+            romusers:[newmessage.senter._id,newmessage.secnt._id],
+            users:`${newmessage.senter._id}${newmessage.senter._id}`,
+            createdAt:Date.now(),
+            updatedAt:Date.now()
+        })
+        room=await this.RoomModel.findOne({_id:room._id}).populate('romusers','_id name surename avatar isActive')
+         }
          room.updatedAt=new Date(Date.now())
          room.last=newmessage._id
          room.save()
