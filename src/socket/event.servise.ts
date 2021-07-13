@@ -18,6 +18,18 @@ export class SocketServise {
         @InjectModel(Events.name) private eventsmodel: Model<EventsDocument>,
         ){}
         async createmessage(data:newmessage,type='message'){
+          let room=await this.RoomModel.findOne({_id:data.romId}).populate('romusers','_id name surename avatar isActive')
+
+            if(!room){
+           room=await this.RoomModel.create({
+            romusers:[data.senter,data.secnt],
+            users:`${data.senter}${data.secnt}`,
+            createdAt:Date.now(),
+            updatedAt:Date.now()
+        })
+        room=await this.RoomModel.findOne({_id:room._id}).populate('romusers','_id name surename avatar isActive')
+        data.romId=room._id
+         }
          const message=await this.Messagemodal.create({...data,type,createdAt:new Date(Date.now())})
          const newmessage:any= await this.Messagemodal.findOne({_id:message._id})
          .populate("senter",'_id name surename avatar lastvisite')
@@ -28,16 +40,6 @@ export class SocketServise {
             path : 'user'
           }
         }) 
-         let room=await this.RoomModel.findOne({_id:data.romId}).populate('romusers','_id name surename avatar isActive')
-         if(!room){
-           room=await this.RoomModel.create({
-            romusers:[newmessage.senter._id,newmessage.secnt._id],
-            users:`${newmessage.senter._id}${newmessage.senter._id}`,
-            createdAt:Date.now(),
-            updatedAt:Date.now()
-        })
-        room=await this.RoomModel.findOne({_id:room._id}).populate('romusers','_id name surename avatar isActive')
-         }
          room.updatedAt=new Date(Date.now())
          room.last=newmessage._id
          room.save()
